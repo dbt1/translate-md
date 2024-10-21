@@ -24,12 +24,12 @@
     - [Option 2: System-wide installation](#option-2-system-wide-installation)
   - [Usage](#use)
     - [Example](#example)
-    - [GitHub Actions Integration Example](#example-of-github-actions-integration)
+    - [Example of GitHub Actions Integration](#example-of-github-actions-integration)
 
 ## Features
 
 - **Automatic language recognition**: The script automatically recognizes the source language from the template.
-- **Multilingual translation**: It translates the content into several languages, which can be supplemented in the script under `TARGET_LANGUAGES` or optionally via a json configuration file.
+- **Multilingual translation**: It translates the content into several languages, which can be added to the script under `TARGET_LANGUAGES` or optionally via a json configuration file if necessary.
 - **Preserves formatting**: Code blocks, anchors and headings etc. are identified and treated separately to maintain their functionality
 - **Language navigation links**: Language links are added or updated in each translated file, allowing the reader to easily switch between different language versions.
 
@@ -87,13 +87,13 @@ Installation:
 2. **Make script executable** (only for Unix-based systems, optional):
 
    ```bash
-   chmod +x translate_readme.py
+   chmod +x translate-md.py
    ```
 
 3. **Run script**:
 
    ```bash
-   python3 translate_readme.py
+   python3 translate-md.py
    ```
 
 ### Option 2: System-wide installation
@@ -113,7 +113,7 @@ Run the script from the command line by specifying the Markdown template file wi
 ### Example
 
    ```bash
-   python translate_readme.py -t template.md
+   python translate-md.py -t template.md
    ```
 
 ### Example of GitHub Actions integration
@@ -155,7 +155,7 @@ jobs:
 
     - name: Run translation script
       run: |
-        python translate_readme.py --template-md ./templates/README_de.md --output-dir . --prefix README_ --main-doc README.md
+        python translate-md.py --template-md ./templates/README_de.md --output-dir . --prefix README_ --main-doc README.md
 
     - name: Commit changes
       run: |

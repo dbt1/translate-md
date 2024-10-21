@@ -29,7 +29,7 @@
 ## Funktionen
 
 - **Automatische Spracherkennung**: Das Skript erkennt automatisch die Ausgangssprache aus der Vorlage.
-- **Mehrsprachige Übersetzung**: Es übersetzt den Inhalt in mehrere Sprachen, die im Script unter `TARGET_LANGUAGES` oder optional über eine json-Konfigurationsdaiet Bedarf ergänzt werden können.
+- **Mehrsprachige Übersetzung**: Es übersetzt den Inhalt in mehrere Sprachen, die im Script unter `TARGET_LANGUAGES` oder optional über eine json-Konfigurationsdatei bei Bedarf ergänzt werden können.
 - **Bewahrt Formatierung**: Codeblöcke, Anker und Überschriften usw. werden identifiziert und separat behandelt, um deren Fuktionalität beizubehalten
 - **Sprachnavigationslinks**: Sprachlinks werden in jeder übersetzten Datei hinzugefügt oder aktualisiert, so dass  für den Leser ein einfacher Wechsel zwischen verschiedenen Sprachversionen möglich ist.
 
@@ -87,13 +87,13 @@ Installation:
 2. **Skript ausführbar machen** (nur für Unix-basierte Systeme, optional):
 
    ```bash
-   chmod +x translate_readme.py
+   chmod +x translate-md.py
    ```
 
 3. **Skript ausführen**:
 
    ```bash
-   python3 translate_readme.py
+   python3 translate-md.py
    ```
 
 ### Option 2: Systemweite Installation
@@ -113,7 +113,7 @@ Führe das Skript über die Befehlszeile durch die Angabe der Markdown-Vorlagend
 ### Beispiel
 
    ```bash
-   python translate_readme.py -t template.md
+   python translate-md.py -t template.md
    ```
 
 ### Beispiel für GitHub Actions Integration
@@ -155,7 +155,7 @@ jobs:
 
     - name: Run translation script
       run: |
-        python translate_readme.py --template-md ./templates/README_de.md --output-dir . --prefix README_ --main-doc README.md
+        python translate-md.py --template-md ./templates/README_de.md --output-dir . --prefix README_ --main-doc README.md
 
     - name: Commit changes
       run: |
