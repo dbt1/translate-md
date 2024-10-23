@@ -6,7 +6,7 @@
 
 <div style="display: flex; align-items: center;">
   <img src="translate-md.png" alt="translate-md" style="width: 64px; margin-right: 10px;">
-  <span>The Translate-MD script is used to translate a Markdown document template, such as README.md files, into multiple languages. Coded content such as code blocks, anchors and headings, etc. should be retained during the translation process. <br>
+  <span>Translate-MD is a Python script and is used to translate a Markdown document template, such as README.md files, into multiple languages. Coded content such as code blocks, anchors and headings, etc. should be retained during the translation process. <br>
   It uses Google Translator to automatically translate the content while leaving certain sections unchanged. Additionally, it implements language links in all translated files to enable easy navigation between different language versions.
   </span>
 </div>
@@ -24,12 +24,12 @@
     - [Option 2: System-wide installation](#option-2-system-wide-installation)
   - [Usage](#use)
     - [Example](#example)
-    - [Example of GitHub Actions Integration](#example-of-github-actions-integration)
+    - [GitHub Actions Integration Example](#example-of-github-actions-integration)
 
 ## Features
 
-- **Automatic language recognition**: The script automatically recognizes the source language from the template.
-- **Multilingual translation**: It translates the content into several languages, which can be added to the script under `TARGET_LANGUAGES` or optionally via a json configuration file if necessary.
+- **Automatic language recognition**: Translate-MD automatically recognizes the source language from the template.
+- **Multilingual translation**: Translate-MD translates the content into several languages, which can be supplemented in the script under `TARGET_LANGUAGES` or optionally via a json configuration file if necessary.
 - **Preserves formatting**: Code blocks, anchors and headings etc. are identified and treated separately to maintain their functionality
 - **Language navigation links**: Language links are added or updated in each translated file, allowing the reader to easily switch between different language versions.
 
@@ -39,7 +39,7 @@
 git clone https://github.com/dbt1/translate-md.git
 ```
 
-You can run the translation script from a location of your choice or directly where it is after cloning or in the same directory where the Markdown template (default: `template.md`) is located. If you want to run the translation script directly, you must make the script executable by changing the permission.
+You can run Translate-MD from a location of your choice, directly where it is after cloning, or in the same directory where the Markdown template (default: `template.md`) is located. If you want to run Translate-MD directly, you need to make the script executable by changing the permission.
 
    ```bash
    chmod +x dateiname.py
@@ -47,7 +47,7 @@ You can run the translation script from a location of your choice or directly wh
    
 ### Install dependencies
 
-This script requires `googletrans` for translation:
+Translate-MD requires `googletrans` for translation:
 
 Installation: 
   
@@ -104,11 +104,11 @@ If you don't want to use a virtual environment, you can also install the require
    pip install googletrans==3.1.0a0
    ```
 
-You can then run the script as usual.
+You can then run Translate-MD as usual.
 
 ## use
 
-Run the script from the command line by specifying the Markdown template file with the `-t` argument. If no argument is given, the script defaults to `template.md` from the current directory and the translations are also created in the same directory. The script can be used locally or for automated translation, e.g. via a workflow of a Git repository like GitHub, for example by calling it accordingly via commit processes. It could also be used in a similar way via Git hooks, depending on how it is integrated.
+Run Translate-MD from the command line by specifying the Markdown template file with the `-t` argument. If no argument is given, Translate-MD defaults to `template.md` from the current directory and the translations are also created in the same directory. Translate-MD can be used locally or for automated translation, e.g. via a workflow of a Git repository like GitHub, for example by calling it accordingly via commit processes. You could also use it in a similar way via Git hooks, depending on how it is integrated.
 
 ### Example
 
@@ -118,7 +118,7 @@ Run the script from the command line by specifying the Markdown template file wi
 
 ### Example of GitHub Actions integration
 
-The translation script can also be used in GitHub Actions, for example to automatically translate a README file on certain events (e.g. after a commit to the main branch).
+Translate-MD can also be used in GitHub Actions, for example to automatically translate a README file on certain events (e.g. after a commit to the main branch).
   
 **Note about GitHub Actions permissions**: In order for the GitHub Actions workflow to have the necessary permissions to push changes to the repository, you may need to set up an `Personal Access Token (PAT)`. This token is needed to ensure authentication, especially when pushing to a repository. For more information about setting up an `PAT`, see the [GitHub token configuration documentation](https://docs.github.com/en/enterprise-server@3.1/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
