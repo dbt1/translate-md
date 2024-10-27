@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'template.md'
+      - 'translate-md-config.json.sample'
 
 permissions:
   contents: write
@@ -30,7 +31,7 @@ jobs:
 
     - name: Translate README
       run: |
-        python translate-md.py --template-md template.md --output-dir . --prefix README_ --main-doc README.md
+        python translate-md.py --template-md template.md --output-dir . --prefix README_ --main-doc README.md -c translate-md-config.json.sample
 
     - name: Commit and push translated README
       run: |
