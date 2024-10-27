@@ -15,14 +15,19 @@ Features:
   including the source language.
 - Handles placeholders for code blocks, anchors, headers, URLs, images, HTML elements, inline code,
   tables, and LaTeX formulas to ensure the consistency of formatting.
-- Updates or adds language links to navigate between different language versions.
-- Allows specifying the output directory, file prefix, main document file name, and configuration file.
+- Updates or adds language links to navigate between different language versions (unless disabled).
+- Allows specifying the output directory, file prefix, main document file name, configuration file, and
+  an option to disable language links.
+- Optionally prevents the insertion of language links into the target files and skips the creation
+  of the main document file when language links are disabled.
 
 Usage:
 - Run the script from the command line, specifying the Markdown template file using the `-t` argument.
 - Optionally, specify the output directory with `-o`, the file prefix with `-p`, the main document file name
   with `-m`, and the configuration file with `-c`.
-- Example: `python translate_readme.py -t template.md -o translated_readmes -p DOC_ -m MAIN_DOC.md -c config.json`
+- Use the `--no-language-links` or `-n` option to prevent the insertion of language links and skip the creation
+  of the main document file.
+- Example: `python translate_readme.py -t template.md -o translated_readmes -p DOC_ -n -c config.json`
 - Use also argument --help or take a look at README file.
 
 Dependencies:
@@ -652,6 +657,11 @@ def main():
         help='Path to configuration file (optional)'
     )
     parser.add_argument(
+        '-n', '--no-language-links',
+        action='store_true',
+        help='Prevent insertion of language links in the target files and skip creation of main document file'
+    )
+    parser.add_argument(
         '--version',
         action='version',
         version=f'%(prog)s v{VERSION}'
@@ -678,6 +688,7 @@ def main():
     output_dir = config.get('output_dir', args.output_dir)
     prefix = config.get('prefix', args.prefix)
     main_doc = config.get('main_doc', args.main_doc)
+    no_language_links = config.get('no_language_links', args.no_language_links)
     target_languages_config = config.get('target_languages', None)
 
     # Prepare target languages
@@ -742,8 +753,15 @@ def main():
             f"The main document file name '{main_doc}' starts not with the namespace'{prefix}'s. Use the '-m' parameter to set another main file or set '-p' parameter for another prefix."
         )
 
-    # Create or update the main readme file with only language links
-    create_main_doc(output_dir, main_doc, translated_files, prefix)
+    if not no_language_links:
+        # Create or update the main readme file with only language links
+        create_main_doc(output_dir, main_doc, translated_files, prefix)
+    else:
+        # Output a warning that the main document will not be created and the '-m' option is ignored
+        logging.warning(
+            "Language links are disabled; the main document file will not be created. "
+            "The '-m' option is ignored when '--no-language-links' is used."
+        )
 
     # Prepare all target files with placeholder only (always overwrite)
     prepare_target_files(output_dir, translated_files, source_lang_code, source_lang_name)
@@ -768,34 +786,38 @@ def main():
             translator, source_lang_code, dest_lang
         )
 
-        # Add or update language links with the current language highlighted (greyed out)
-        translated_content = add_or_update_language_links(
-            translated_content, translated_files, main_doc, prefix, current_lang_code=dest_lang
-        )
+        if not no_language_links:
+            # Add or update language links with the current language highlighted (greyed out)
+            translated_content = add_or_update_language_links(
+                translated_content, translated_files, main_doc, prefix, current_lang_code=dest_lang
+            )
+        else:
+            logging.debug("Language links are disabled; skipping addition of language links to the translated content.")
 
         # Insert the translated content at the placeholder position
         insert_translated_content(translated_file, translated_content)
 
-    # Check consistency of language links in the main readme file
-    main_doc_path = os.path.join(output_dir, main_doc)
-    try:
-        with open(main_doc_path, 'r', encoding='utf-8') as file:
-            main_doc_content = file.read()
-    except Exception as e:
-        logging.exception(f"Error reading '{main_doc_path}': {e}")
-        sys.exit(1)
+    if not no_language_links:
+        # Check consistency of language links in the main readme file
+        main_doc_path = os.path.join(output_dir, main_doc)
+        try:
+            with open(main_doc_path, 'r', encoding='utf-8') as file:
+                main_doc_content = file.read()
+        except Exception as e:
+            logging.exception(f"Error reading '{main_doc_path}': {e}")
+            sys.exit(1)
 
-    # Verify that all expected links are present
-    missing_links = [
-        f"[{TARGET_LANGUAGES[code][1]} {TARGET_LANGUAGES[code][0]}]({translated_files[code]})"
-        for code in TARGET_LANGUAGES
-        if f"[{TARGET_LANGUAGES[code][1]} {TARGET_LANGUAGES[code][0]}]({translated_files[code]})" not in main_doc_content
-    ]
-    if missing_links:
-        logging.warning(
-            f"The main document '{main_doc}' is missing links to the following translated files: {', '.join(missing_links)}. "
-            f"Please verify that the links correctly point to the translated files with prefix '{prefix}'."
-        )
+        # Verify that all expected links are present
+        missing_links = [
+            f"[{TARGET_LANGUAGES[code][1]} {TARGET_LANGUAGES[code][0]}]({translated_files[code]})"
+            for code in TARGET_LANGUAGES
+            if f"[{TARGET_LANGUAGES[code][1]} {TARGET_LANGUAGES[code][0]}]({translated_files[code]})" not in main_doc_content
+        ]
+        if missing_links:
+            logging.warning(
+                f"The main document '{main_doc}' is missing links to the following translated files: {', '.join(missing_links)}. "
+                f"Please verify that the links correctly point to the translated files with prefix '{prefix}'."
+            )
 
     logging.info("Translation process completed successfully.")
 
