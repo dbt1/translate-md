@@ -193,8 +193,8 @@ Angenommen, du hast eine `config.json` mit folgendem Inhalt:
     "main_doc": "main_README.md",
     "no_language_links": false,
     "target_languages": {
-        "en": ["English", "🇬🇧"],
         "de": ["Deutsch", "🇩🇪"],
+        "en": ["English", "🇬🇧"],
         "fr": ["Français", "🇫🇷"]
     }
 }
