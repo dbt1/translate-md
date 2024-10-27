@@ -1,8 +1,8 @@
 {
     "template_md": "template.md",
     "output_dir": ".",
-    "prefix": "DOC_",
-    "main_readme": "DOC.md",
+    "prefix": "README_",
+    "main_doc": "README.md",
     "target_languages": {
         "de": ["German", "🇩🇪"],
         "en": ["English", "🇬🇧"],
