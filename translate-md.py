@@ -4,7 +4,7 @@ Markdown File Translation Script
 
 This script translates a Markdown template file into multiple languages, handling specific placeholders
 and ensuring that important content like code blocks, anchors, headers, URLs, images, HTML elements,
-inline code, tables, and LaTeX formulas are preserved throughout the translation process.
+inline code, LaTeX formulas, and table separator lines are preserved throughout the translation process.
 
 It uses Google Translate to automatically translate content while keeping specific sections intact.
 It also updates language links in all translated markdown files to allow easy navigation between different
@@ -14,7 +14,7 @@ Features:
 - Detects the source language automatically or allows specifying it via a command-line argument.
 - Translates the content into specified target languages.
 - Handles placeholders for code blocks, anchors, headers, URLs, images, HTML elements, inline code,
-  tables, and LaTeX formulas to ensure the consistency of formatting.
+  LaTeX formulas, and table separator lines to ensure the consistency of formatting.
 - Updates or adds language links to navigate between different language versions (unless disabled).
 - Allows specifying the output directory, file prefix, main document file name, configuration file, and
   an option to disable language links.
@@ -51,7 +51,7 @@ import argparse
 
 # Version of the script
 VERSION_MAJOR = "1"
-VERSION_MINOR = "1"
+VERSION_MINOR = "2"
 VERSION_PATCH = "0"
 VERSION = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
@@ -107,8 +107,8 @@ URL_PLACEHOLDER = "@URL_PLACEHOLDER_{}@"
 IMAGE_PLACEHOLDER = "@IMAGE_{}@"
 HTML_PLACEHOLDER = "@HTML_{}@"
 INLINE_CODE_PLACEHOLDER = "@INLINE_CODE_{}@"
-TABLE_PLACEHOLDER = "@TABLE_{}@"
 LATEX_PLACEHOLDER = "@LATEX_{}@"
+TABLE_SEPARATOR_PLACEHOLDER = "@TABLE_SEPARATOR_{}@"
 
 # Markers for the section containing language links
 LANGUAGE_LINKS_START = "<!-- LANGUAGE_LINKS_START -->"
@@ -172,8 +172,8 @@ def load_template(template_file, target_filenames):
 
 def extract_placeholders(content):
     """
-    Extracts code blocks, anchors, headers, URLs, images, HTML elements, inline code, tables,
-    and LaTeX formulas, and replaces them with placeholders.
+    Extracts code blocks, anchors, headers, URLs, images, HTML elements, inline code,
+    LaTeX formulas, and table separator lines, and replaces them with placeholders.
 
     Args:
         content (str): The content to process.
@@ -188,8 +188,8 @@ def extract_placeholders(content):
             - images (list): List of images.
             - html_elements (list): List of HTML elements.
             - inline_codes (list): List of inline code segments.
-            - tables (list): List of tables.
             - latex_formulas (list): List of LaTeX formulas.
+            - table_separators (list): List of table separator lines.
     """
     code_blocks = []
     anchor_placeholders = {}
@@ -198,8 +198,8 @@ def extract_placeholders(content):
     images = []
     html_elements = []
     inline_codes = []
-    tables = []
     latex_formulas = []
+    table_separators = []
 
     # Replace code blocks
     def replace_code_block(match):
@@ -211,24 +211,55 @@ def extract_placeholders(content):
 
     content = re.sub(r'```[\s\S]*?```', replace_code_block, content, flags=re.DOTALL)
 
-    # Replace tables (vor Inline-Code)
-    def replace_table(match):
-        table = match.group(0)
-        # Extract inline code within the table
-        def replace_inline_code_in_table(match_inner):
-            inline_code = match_inner.group(0)
-            inline_codes.append(inline_code)
-            index = len(inline_codes) - 1
-            placeholder = INLINE_CODE_PLACEHOLDER.format(index)
-            return placeholder
-        table = re.sub(r'`[^`]+`', replace_inline_code_in_table, table)
-        tables.append(table)
-        index = len(tables) - 1
-        placeholder = TABLE_PLACEHOLDER.format(index)
+    # Replace inline code
+    def replace_inline_code(match):
+        inline_code = match.group(0)
+        inline_codes.append(inline_code)
+        index = len(inline_codes) - 1
+        placeholder = INLINE_CODE_PLACEHOLDER.format(index)
         return placeholder
 
-    # A simple regex to match tables
-    content = re.sub(r'((?:\|.*?\|(?:\n|$))+)', replace_table, content)
+    content = re.sub(r'`[^`]+`', replace_inline_code, content)
+
+    # Replace LaTeX formulas
+    def replace_latex(match):
+        latex = match.group(0)
+        latex_formulas.append(latex)
+        index = len(latex_formulas) - 1
+        placeholder = LATEX_PLACEHOLDER.format(index)
+        return placeholder
+
+    content = re.sub(r'\$\$[\s\S]*?\$\$|\$[^$]+\$', replace_latex, content, flags=re.DOTALL)
+
+    # Replace images
+    def replace_image(match):
+        image = match.group(0)
+        images.append(image)
+        index = len(images) - 1
+        placeholder = IMAGE_PLACEHOLDER.format(index)
+        return placeholder
+
+    content = re.sub(r'!\[.*?\]\(.*?\)', replace_image, content)
+
+    # Replace URLs within links
+    def replace_url(match):
+        url = match.group(1)
+        index = len(url_placeholders)
+        placeholder = URL_PLACEHOLDER.format(index)
+        url_placeholders[placeholder] = url
+        return f"({placeholder})"
+
+    content = re.sub(r'\((https?://[^\s)]+)\)', replace_url, content)
+
+    # Replace HTML elements
+    def replace_html(match):
+        html_element = match.group(0)
+        html_elements.append(html_element)
+        index = len(html_elements) - 1
+        placeholder = HTML_PLACEHOLDER.format(index)
+        return placeholder
+
+    content = re.sub(r'<[^>]+>', replace_html, content)
 
     # Replace anchors
     def replace_anchor(match):
@@ -251,58 +282,19 @@ def extract_placeholders(content):
 
     content = re.sub(r'^(#+)\s+(.*)', replace_header, content, flags=re.MULTILINE)
 
-    # Replace URLs within links
-    def replace_url(match):
-        url = match.group(1)
-        index = len(url_placeholders)
-        placeholder = URL_PLACEHOLDER.format(index)
-        url_placeholders[placeholder] = url
-        return f"({placeholder})"
-
-    content = re.sub(r'\((https?://[^\s)]+)\)', replace_url, content)
-
-    # Replace images
-    def replace_image(match):
-        image = match.group(0)
-        images.append(image)
-        index = len(images) - 1
-        placeholder = IMAGE_PLACEHOLDER.format(index)
+    # Replace table separator lines
+    def replace_table_separator_line(match):
+        separator_line = match.group(0)
+        table_separators.append(separator_line)
+        index = len(table_separators) - 1
+        placeholder = TABLE_SEPARATOR_PLACEHOLDER.format(index)
         return placeholder
 
-    content = re.sub(r'!\[.*?\]\(.*?\)', replace_image, content)
-
-    # Replace HTML elements
-    def replace_html(match):
-        html_element = match.group(0)
-        html_elements.append(html_element)
-        index = len(html_elements) - 1
-        placeholder = HTML_PLACEHOLDER.format(index)
-        return placeholder
-
-    content = re.sub(r'<[^>]+>', replace_html, content)
-
-    # Replace inline code (outside of tables)
-    def replace_inline_code(match):
-        inline_code = match.group(0)
-        inline_codes.append(inline_code)
-        index = len(inline_codes) - 1
-        placeholder = INLINE_CODE_PLACEHOLDER.format(index)
-        return placeholder
-
-    content = re.sub(r'`[^`]+`', replace_inline_code, content)
-
-    # Replace LaTeX formulas
-    def replace_latex(match):
-        latex = match.group(0)
-        latex_formulas.append(latex)
-        index = len(latex_formulas) - 1
-        placeholder = LATEX_PLACEHOLDER.format(index)
-        return placeholder
-
-    content = re.sub(r'\$\$.*?\$\$|\$.*?\$', replace_latex, content, flags=re.DOTALL)
+    # Regex to match table separator lines (e.g., |---|---|---|)
+    content = re.sub(r'^\s*\|[:\-]+\|(?:[:\-]+\|)+\s*$', replace_table_separator_line, content, flags=re.MULTILINE)
 
     return (content, code_blocks, anchor_placeholders, headers, url_placeholders,
-            images, html_elements, inline_codes, tables, latex_formulas)
+            images, html_elements, inline_codes, latex_formulas, table_separators)
 
 def translate_content(content, translator, src_lang, dest_lang):
     """
@@ -342,7 +334,7 @@ def generate_anchor(text):
     return anchor
 
 def restore_placeholders(translated_content, code_blocks, anchor_placeholders, headers, url_placeholders,
-                         images, html_elements, inline_codes, tables, latex_formulas,
+                         images, html_elements, inline_codes, latex_formulas, table_separators,
                          translator, src_lang, dest_lang):
     """
     Restores placeholders with the original or translated content.
@@ -356,8 +348,8 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
         images (list): List of images.
         html_elements (list): List of HTML elements.
         inline_codes (list): List of inline code segments.
-        tables (list): List of tables.
         latex_formulas (list): List of LaTeX formulas.
+        table_separators (list): List of table separator lines.
         translator (Translator): An instance of googletrans Translator.
         src_lang (str): Source language code.
         dest_lang (str): Destination language code.
@@ -365,11 +357,6 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
     Returns:
         str: Content with placeholders restored.
     """
-    # Restore tables (before inline-code)
-    for i, table in enumerate(tables):
-        placeholder = TABLE_PLACEHOLDER.format(i)
-        translated_content = translated_content.replace(placeholder, table)
-
     # Restore headers and generate new anchors
     new_anchors = {}
     for i, (header_level, header_text) in enumerate(headers):
@@ -410,6 +397,11 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
             new_anchor = original_anchor  # Fallback if no matching header is found
         translated_content = translated_content.replace(placeholder, f"#{new_anchor}")
 
+    # Restore table separator lines
+    for i, separator_line in enumerate(table_separators):
+        placeholder = TABLE_SEPARATOR_PLACEHOLDER.format(i)
+        translated_content = translated_content.replace(placeholder, separator_line)
+
     # Restore code blocks
     for i, code_block in enumerate(code_blocks):
         placeholder = CODE_PLACEHOLDER.format(i)
@@ -429,7 +421,7 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
         placeholder = HTML_PLACEHOLDER.format(i)
         translated_content = translated_content.replace(placeholder, html_element)
 
-    # Restore inline code (both inside and outside of tables)
+    # Restore inline code
     for i, inline_code in enumerate(inline_codes):
         placeholder = INLINE_CODE_PLACEHOLDER.format(i)
         translated_content = translated_content.replace(placeholder, inline_code)
@@ -617,9 +609,11 @@ def get_flag_emoji(country_code):
     country_code = country_code.upper()
 
     # Convert the country code into flag emoji
-    flag_emoji = ''.join(chr(0x1F1E6 + ord(char) - ord('A')) for char in country_code)
-
-    return flag_emoji
+    try:
+        flag_emoji = ''.join(chr(0x1F1E6 + ord(char) - ord('A')) for char in country_code)
+        return flag_emoji
+    except:
+        return ''  # Return empty string if conversion fails
 
 def main():
     """
@@ -800,7 +794,7 @@ def main():
 
         # Extract placeholders
         (content_placeholder, code_blocks, anchor_placeholders, headers, url_placeholders,
-         images, html_elements, inline_codes, tables, latex_formulas) = extract_placeholders(content)
+         images, html_elements, inline_codes, latex_formulas, table_separators) = extract_placeholders(content)
 
         if dest_lang == source_lang_code:
             logging.info(f"Skipping translation for source language '{source_lang_code}'")
@@ -812,7 +806,7 @@ def main():
         # Restore placeholders
         translated_content = restore_placeholders(
             translated_content, code_blocks, anchor_placeholders, headers, url_placeholders,
-            images, html_elements, inline_codes, tables, latex_formulas,
+            images, html_elements, inline_codes, latex_formulas, table_separators,
             translator, source_lang_code, dest_lang
         )
 
