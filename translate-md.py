@@ -211,6 +211,25 @@ def extract_placeholders(content):
 
     content = re.sub(r'```[\s\S]*?```', replace_code_block, content, flags=re.DOTALL)
 
+    # Replace tables (vor Inline-Code)
+    def replace_table(match):
+        table = match.group(0)
+        # Extract inline code within the table
+        def replace_inline_code_in_table(match_inner):
+            inline_code = match_inner.group(0)
+            inline_codes.append(inline_code)
+            index = len(inline_codes) - 1
+            placeholder = INLINE_CODE_PLACEHOLDER.format(index)
+            return placeholder
+        table = re.sub(r'`[^`]+`', replace_inline_code_in_table, table)
+        tables.append(table)
+        index = len(tables) - 1
+        placeholder = TABLE_PLACEHOLDER.format(index)
+        return placeholder
+
+    # A simple regex to match tables
+    content = re.sub(r'((?:\|.*?\|(?:\n|$))+)', replace_table, content)
+
     # Replace anchors
     def replace_anchor(match):
         anchor = match.group(1)
@@ -262,7 +281,7 @@ def extract_placeholders(content):
 
     content = re.sub(r'<[^>]+>', replace_html, content)
 
-    # Replace inline code
+    # Replace inline code (outside of tables)
     def replace_inline_code(match):
         inline_code = match.group(0)
         inline_codes.append(inline_code)
@@ -281,17 +300,6 @@ def extract_placeholders(content):
         return placeholder
 
     content = re.sub(r'\$\$.*?\$\$|\$.*?\$', replace_latex, content, flags=re.DOTALL)
-
-    # Replace tables
-    def replace_table(match):
-        table = match.group(0)
-        tables.append(table)
-        index = len(tables) - 1
-        placeholder = TABLE_PLACEHOLDER.format(index)
-        return placeholder
-
-    # A simple regex to match tables
-    content = re.sub(r'((?:\|.*?\|(?:\n|$))+)', replace_table, content)
 
     return (content, code_blocks, anchor_placeholders, headers, url_placeholders,
             images, html_elements, inline_codes, tables, latex_formulas)
@@ -357,6 +365,11 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
     Returns:
         str: Content with placeholders restored.
     """
+    # Restore tables (before inline-code)
+    for i, table in enumerate(tables):
+        placeholder = TABLE_PLACEHOLDER.format(i)
+        translated_content = translated_content.replace(placeholder, table)
+
     # Restore headers and generate new anchors
     new_anchors = {}
     for i, (header_level, header_text) in enumerate(headers):
@@ -416,15 +429,10 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
         placeholder = HTML_PLACEHOLDER.format(i)
         translated_content = translated_content.replace(placeholder, html_element)
 
-    # Restore inline code
+    # Restore inline code (both inside and outside of tables)
     for i, inline_code in enumerate(inline_codes):
         placeholder = INLINE_CODE_PLACEHOLDER.format(i)
         translated_content = translated_content.replace(placeholder, inline_code)
-
-    # Restore tables
-    for i, table in enumerate(tables):
-        placeholder = TABLE_PLACEHOLDER.format(i)
-        translated_content = translated_content.replace(placeholder, table)
 
     # Restore LaTeX formulas
     for i, latex in enumerate(latex_formulas):
@@ -767,7 +775,8 @@ def main():
     # Log potential conflict
     if not is_filename_in_namespace(main_doc, prefix):
         logging.warning(
-            f"The main document file name '{main_doc}' starts not with the namespace '{prefix}'. Use the '-m' parameter to set another main file or set '-p' parameter for another prefix."
+            f"The main document file name '{main_doc}' does not start with the namespace '{prefix}'. "
+            f"Use the '-m' parameter to set another main file or set '-p' parameter for another prefix."
         )
 
     if not no_language_links:
