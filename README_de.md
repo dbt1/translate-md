@@ -111,7 +111,7 @@ Anschließend kannst du `Translate-MD` wie gewohnt ausführen.
 
 ## Verwendung
 
-Hier sind mehrere Beispiele, wie du das Skript mit allen möglichen Parametern verwenden kannst:
+Die folgende Beispiele sollten dir helfen, das Skript flexibel und entsprechend deinen Anforderungen zu verwenden.
 
 ---
 
@@ -119,19 +119,17 @@ Hier sind mehrere Beispiele, wie du das Skript mit allen möglichen Parametern v
 
 | Kurzform | Langform              | Beschreibung                                                                           | Standardwert                           |
 |----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
-| @INLINE_CODE_15@     | @INLINE_CODE_16@       | Pfad zur Template-Datei Standard:                                                       | @INLINE_CODE_17@ (im aktuellen Verzeichnis) |
-| @INLINE_CODE_18@     | @INLINE_CODE_19@        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | @INLINE_CODE_20@ (aktuelles Verzeichnis)            |
-| @INLINE_CODE_21@     | @INLINE_CODE_22@            | Präfix für die Namen der übersetzten Dateien                                             | @INLINE_CODE_23@                                 |
-| @INLINE_CODE_24@     | @INLINE_CODE_25@          | Name der Hauptdokument-Datei                                                              | @INLINE_CODE_26@                               |
-| @INLINE_CODE_27@     | @INLINE_CODE_28@       | Pfad zur Konfigurationsdatei (optional)                                                  | @INLINE_CODE_29@                                 |
-| @INLINE_CODE_30@     | @INLINE_CODE_31@ | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | @INLINE_CODE_32@ (Sprachlinks aktiviert)        |
-| @INLINE_CODE_33@     | @INLINE_CODE_34@       | Quellsprache (optional)                                                                 | @INLINE_CODE_35@ (automatisch)        |
-| @INLINE_CODE_36@     | @INLINE_CODE_37@           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
-| @INLINE_CODE_38@     | @INLINE_CODE_39@              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
+| `-t`     | `--template-md`       | Pfad zur Template-Datei Standard:                                                       | `template.md` (im aktuellen Verzeichnis) |
+| `-o`     | `--output-dir`        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | `.` (aktuelles Verzeichnis)            |
+| `-p`     | `--prefix`            | Präfix für die Namen der übersetzten Dateien                                             | `DOC_`                                 |
+| `-m`     | `--main-doc`          | Name der Hauptdokument-Datei                                                              | `DOC.md`                               |
+| `-c`     | `--config-file`       | Pfad zur Konfigurationsdatei (optional)                                                  | `None`                                 |
+| `-n`     | `--no-language-links` | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | `False` (Sprachlinks aktiviert)        |
+| `-s`     | `--source-lang`       | Quellsprache (optional)                                                                 | `None` (automatisch)        |
+| `-v`     | `--version`           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
+| `-h`     | `--help`              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
 
 ---
-
-Die folgende Beispiele sollten dir helfen, das Skript flexibel und entsprechend deinen Anforderungen zu verwenden.
 
 ### 1. Standardverwendung mit den Standardparametern
 

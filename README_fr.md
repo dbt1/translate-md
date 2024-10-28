@@ -35,7 +35,7 @@
     - [9. Afficher l'aide](#9-afficher-laide)
     - [10. Exemple avec les liens linguistiques désactivés et utilisant un préfixe différent](#10-exemple-avec-des-liens-linguistiques-désactivés-et-utilisant-un-préfixe-différent)
     - [11. Utiliser la forme courte des options](#11-utilisation-de-la-forme-abrégée-des-options)
-  - [Exemple d'intégration d'actions GitHub](#exemple-dintégration-de-github-actions)
+  - [Exemple d'intégration des actions GitHub](#exemple-dintégration-de-github-actions)
 
 ## Caractéristiques
 
@@ -111,27 +111,25 @@ Vous pouvez ensuite exécuter `Translate-MD` comme d'habitude.
 
 ## utiliser
 
-Voici plusieurs exemples de la façon dont vous pouvez utiliser le script avec tous les paramètres possibles :
+Les exemples suivants devraient vous aider à utiliser le script de manière flexible et selon vos besoins.
 
 ---
 
 ### Résumé des paramètres
 
-| Kurzform | Langform              | Beschreibung                                                                           | Standardwert                           |
+| Forme abrégée | Forme longue | Descriptif | Valeur par défaut |
 |----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
-| @INLINE_CODE_15@     | @INLINE_CODE_16@       | Pfad zur Template-Datei Standard:                                                       | @INLINE_CODE_17@ (im aktuellen Verzeichnis) |
-| @INLINE_CODE_18@     | @INLINE_CODE_19@        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | @INLINE_CODE_20@ (aktuelles Verzeichnis)            |
-| @INLINE_CODE_21@     | @INLINE_CODE_22@            | Präfix für die Namen der übersetzten Dateien                                             | @INLINE_CODE_23@                                 |
-| @INLINE_CODE_24@     | @INLINE_CODE_25@          | Name der Hauptdokument-Datei                                                              | @INLINE_CODE_26@                               |
-| @INLINE_CODE_27@     | @INLINE_CODE_28@       | Pfad zur Konfigurationsdatei (optional)                                                  | @INLINE_CODE_29@                                 |
-| @INLINE_CODE_30@     | @INLINE_CODE_31@ | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | @INLINE_CODE_32@ (Sprachlinks aktiviert)        |
-| @INLINE_CODE_33@     | @INLINE_CODE_34@       | Quellsprache (optional)                                                                 | @INLINE_CODE_35@ (automatisch)        |
-| @INLINE_CODE_36@     | @INLINE_CODE_37@           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
-| @INLINE_CODE_38@     | @INLINE_CODE_39@              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
+| `-t` | `--template-md` | Chemin d'accès au fichier modèle Par défaut : | `template.md` (dans le répertoire courant) |
+| `-o` | `--output-dir` | Répertoire où les fichiers traduits doivent être enregistrés | `.` (répertoire actuel) |
+| `-p` | `--prefix` | Préfixe pour les noms des fichiers traduits | `DOC_` |
+| `-m` | `--main-doc` | Nom du fichier du document principal | `DOC.md` |
+| `-c` | `--config-file` | Chemin d'accès au fichier de configuration (facultatif) | `None` |
+| `-n` | `--no-language-links` | Empêche l'insertion de liens de langue et ignore la création du fichier de document principal | `False` (Liens linguistiques activés) |
+| `-s` | `--source-lang` | Langue source (facultatif) | `None` (automatique) |
+| `-v` | `--version` | Affiche la version du script et arrête l'exécution |                                        |
+| `-h` | `--help` | Affiche le message d'aide avec toutes les options disponibles |                                        |
 
 ---
-
-Les exemples suivants devraient vous aider à utiliser le script de manière flexible et selon vos besoins.
 
 ### 1. Utilisation standard avec les paramètres standards
 

@@ -111,16 +111,25 @@ Potrai quindi eseguire `Translate-MD` come al solito.
 
 ## utilizzo
 
-Ecco alcuni esempi di come è possibile utilizzare lo script con tutti i parametri possibili:
+I seguenti esempi dovrebbero aiutarti a utilizzare lo script in modo flessibile e in base alle tue esigenze.
 
 ---
 
 ### Riepilogo dei parametri
 
-@TABELLA_0@
----
+| Forma breve | Forma lunga | Descrizione | Valore predefinito |
+|----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
+| `-t` | `--template-md` | Percorso del file modello Predefinito: | `template.md` (nella directory corrente) |
+| `-o` | `--output-dir` | Directory in cui salvare i file tradotti | `.` (directory corrente) |
+| `-p` | `--prefix` | Prefisso per i nomi dei file tradotti | `DOC_` |
+| `-m` | `--main-doc` | Nome del file del documento principale | `DOC.md` |
+| `-c` | `--config-file` | Percorso del file di configurazione (facoltativo) | `None` |
+| `-n` | `--no-language-links` | Impedisce l'inserimento di collegamenti linguistici e salta la creazione del file del documento principale | `False` (Collegamenti linguistici abilitati) |
+| `-s` | `--source-lang` | Lingua di partenza (facoltativa) | `None` (automatico) |
+| `-v` | `--version` | Visualizza la versione dello script e interrompe l'esecuzione |                                        |
+| `-h` | `--help` | Visualizza il messaggio di aiuto con tutte le opzioni disponibili |                                        |
 
-I seguenti esempi dovrebbero aiutarti a utilizzare lo script in modo flessibile e in base alle tue esigenze.
+---
 
 ### 1. Utilizzo standard con parametri standard
 

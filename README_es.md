@@ -111,27 +111,25 @@ Luego puedes ejecutar `Translate-MD` como de costumbre.
 
 ## usar
 
-A continuación se muestran varios ejemplos de cómo puede utilizar el script con todos los parámetros posibles:
+Los siguientes ejemplos le ayudarán a utilizar el script de forma flexible y según sus necesidades.
 
 ---
 
 ### Resumen de parámetros
 
-| Kurzform | Langform              | Beschreibung                                                                           | Standardwert                           |
+| Forma corta | Forma larga | Descripción | Valor predeterminado |
 |----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
-| @INLINE_CODE_15@     | @INLINE_CODE_16@       | Pfad zur Template-Datei Standard:                                                       | @INLINE_CODE_17@ (im aktuellen Verzeichnis) |
-| @INLINE_CODE_18@     | @INLINE_CODE_19@        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | @INLINE_CODE_20@ (aktuelles Verzeichnis)            |
-| @INLINE_CODE_21@     | @INLINE_CODE_22@            | Präfix für die Namen der übersetzten Dateien                                             | @INLINE_CODE_23@                                 |
-| @INLINE_CODE_24@     | @INLINE_CODE_25@          | Name der Hauptdokument-Datei                                                              | @INLINE_CODE_26@                               |
-| @INLINE_CODE_27@     | @INLINE_CODE_28@       | Pfad zur Konfigurationsdatei (optional)                                                  | @INLINE_CODE_29@                                 |
-| @INLINE_CODE_30@     | @INLINE_CODE_31@ | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | @INLINE_CODE_32@ (Sprachlinks aktiviert)        |
-| @INLINE_CODE_33@     | @INLINE_CODE_34@       | Quellsprache (optional)                                                                 | @INLINE_CODE_35@ (automatisch)        |
-| @INLINE_CODE_36@     | @INLINE_CODE_37@           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
-| @INLINE_CODE_38@     | @INLINE_CODE_39@              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
+| `-t` | `--template-md` | Ruta al archivo de plantilla Valor predeterminado: | `template.md` (en el directorio actual) |
+| `-o` | `--output-dir` | Directorio donde se deben guardar los archivos traducidos | `.` (directorio actual) |
+| `-p` | `--prefix` | Prefijo para los nombres de los archivos traducidos | `DOC_` |
+| `-m` | `--main-doc` | Nombre del archivo del documento principal | `DOC.md` |
+| `-c` | `--config-file` | Ruta al archivo de configuración (opcional) | `None` |
+| `-n` | `--no-language-links` | Impide insertar enlaces de idiomas y omite la creación del archivo del documento principal | `False` (Enlaces de idiomas habilitados) |
+| `-s` | `--source-lang` | Idioma de origen (opcional) | `None` (automático) |
+| `-v` | `--version` | Muestra la versión del script y detiene la ejecución |                                        |
+| `-h` | `--help` | Muestra el mensaje de ayuda con todas las opciones disponibles |                                        |
 
 ---
-
-Los siguientes ejemplos le ayudarán a utilizar el script de forma flexible y según sus necesidades.
 
 ### 1. Uso estándar con los parámetros estándar.
 
@@ -325,7 +323,7 @@ A continuación se muestra un ejemplo de un `YAML-Datei` que debe crearse y colo
 La suposición aquí es que desea crear archivos README.md localizados que se encuentran en el directorio raíz de su repositorio.
 Este ejemplo utiliza un archivo de plantilla `template.md` que ya se ha guardado en el directorio raíz de su repositorio. Las traducciones también se envían al directorio raíz `.`. En este caso, se supone que se realizan ajustes en esta plantilla y que el push verifica si se han realizado cambios en este archivo. Si este es el caso, se activa este flujo de trabajo, que se especifica en la sección `on` bajo `push`. Se monitorean la rama `master` y la plantilla `template.md`. Es importante que estén activados los permisos de escritura, los cuales deben ingresarse en la sección `permissions`. Las entradas adicionales garantizan que el entorno necesario esté configurado con algunas dependencias para, en última instancia, enviar los cambios al repositorio.
 
-`[ci skip]` se agrega a la confirmación final. Esto es para evitar que la confirmación active nuevamente el flujo de trabajo si no es así. Esto podría ahorrar recursos innecesarios y evitar bucles. 
+`[ci skip]` se agrega a la confirmación final. Esto es para evitar que la confirmación active nuevamente el flujo de trabajo si no se desea. Esto podría ahorrar recursos innecesarios y evitar bucles. 
 
 
   **Nota:** Tiene sentido probar un flujo de trabajo localmente. ¡Más información sobre esto [aquí](https://github.com/nektos/act)!

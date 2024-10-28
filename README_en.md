@@ -35,7 +35,7 @@
     - [9. Show help](#9-show-help)
     - [10. Example with language links disabled and using a different prefix](#10-example-with-language-links-disabled-and-using-a-different-prefix)
     - [11. Using the short form of options](#11-use-of-the-short-form-of-options)
-  - [GitHub Actions Integration Example](#example-of-github-actions-integration)
+  - [Example of GitHub Actions Integration](#example-of-github-actions-integration)
 
 ## Features
 
@@ -111,27 +111,25 @@ You can then run `Translate-MD` as usual.
 
 ## use
 
-Here are several examples of how you can use the script with all possible parameters:
+The following examples should help you use the script flexibly and according to your needs.
 
 ---
 
 ### Summary of parameters
 
-| Kurzform | Langform              | Beschreibung                                                                           | Standardwert                           |
+| Short form | Long form | Description | Default value |
 |----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
-| @INLINE_CODE_15@     | @INLINE_CODE_16@       | Pfad zur Template-Datei Standard:                                                       | @INLINE_CODE_17@ (im aktuellen Verzeichnis) |
-| @INLINE_CODE_18@     | @INLINE_CODE_19@        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | @INLINE_CODE_20@ (aktuelles Verzeichnis)            |
-| @INLINE_CODE_21@     | @INLINE_CODE_22@            | Präfix für die Namen der übersetzten Dateien                                             | @INLINE_CODE_23@                                 |
-| @INLINE_CODE_24@     | @INLINE_CODE_25@          | Name der Hauptdokument-Datei                                                              | @INLINE_CODE_26@                               |
-| @INLINE_CODE_27@     | @INLINE_CODE_28@       | Pfad zur Konfigurationsdatei (optional)                                                  | @INLINE_CODE_29@                                 |
-| @INLINE_CODE_30@     | @INLINE_CODE_31@ | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | @INLINE_CODE_32@ (Sprachlinks aktiviert)        |
-| @INLINE_CODE_33@     | @INLINE_CODE_34@       | Quellsprache (optional)                                                                 | @INLINE_CODE_35@ (automatisch)        |
-| @INLINE_CODE_36@     | @INLINE_CODE_37@           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
-| @INLINE_CODE_38@     | @INLINE_CODE_39@              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
+| `-t` | `--template-md` | Path to template file Default: | `template.md` (in the current directory) |
+| `-o` | `--output-dir` | Directory where the translated files should be saved | `.` (current directory) |
+| `-p` | `--prefix` | Prefix for the names of the translated files | `DOC_` |
+| `-m` | `--main-doc` | Main document file name | `DOC.md` |
+| `-c` | `--config-file` | Path to configuration file (optional) | `None` |
+| `-n` | `--no-language-links` | Prevents inserting language links and skips creating the main document file | `False` (Language links enabled) |
+| `-s` | `--source-lang` | Source language (optional) | `None` (automatic) |
+| `-v` | `--version` | Displays the version of the script and stops execution |                                        |
+| `-h` | `--help` | Displays the help message with all available options |                                        |
 
 ---
-
-The following examples should help you use the script flexibly and according to your needs.
 
 ### 1. Standard use with the standard parameters
 
