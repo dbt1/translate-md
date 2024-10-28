@@ -107,7 +107,7 @@ Anschließend kannst du `Translate-MD` wie gewohnt ausführen.
 
 ## Verwendung
 
-Hier sind mehrere Beispiele, wie du das Skript mit allen möglichen Parametern verwenden kannst:
+Die folgende Beispiele sollten dir helfen, das Skript flexibel und entsprechend deinen Anforderungen zu verwenden.
 
 ---
 
@@ -126,8 +126,6 @@ Hier sind mehrere Beispiele, wie du das Skript mit allen möglichen Parametern v
 | `-h`     | `--help`              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
 
 ---
-
-Die folgende Beispiele sollten dir helfen, das Skript flexibel und entsprechend deinen Anforderungen zu verwenden.
 
 ### 1. Standardverwendung mit den Standardparametern
 
