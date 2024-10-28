@@ -1,3 +1,4 @@
 .directory
 venv
 *.kate-swp
+DOC*.md
