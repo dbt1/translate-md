@@ -11,8 +11,8 @@ It also updates language links in all translated markdown files to allow easy na
 language versions.
 
 Features:
-- Detects the source language automatically and translates the content into specified target languages,
-  including the source language.
+- Detects the source language automatically or allows specifying it via a command-line argument.
+- Translates the content into specified target languages.
 - Handles placeholders for code blocks, anchors, headers, URLs, images, HTML elements, inline code,
   tables, and LaTeX formulas to ensure the consistency of formatting.
 - Updates or adds language links to navigate between different language versions (unless disabled).
@@ -27,8 +27,9 @@ Usage:
   with `-m`, and the configuration file with `-c`.
 - Use the `--no-language-links` or `-n` option to prevent the insertion of language links and skip the creation
   of the main document file.
-- Example: `python translate_readme.py -t template.md -o translated_readmes -p DOC_ -n -c config.json`
-- Use also argument --help or take a look at README file.
+- Use the `-s` or `--source-lang` option to specify the source language code (e.g., 'de' for German).
+- Example: `python translate_readme.py -t template.md -o translated_readmes -p DOC_ -s de -n -c config.json`
+- Use also argument `--help` or take a look at the README file.
 
 Dependencies:
 - googletrans (to install: `pip install googletrans==3.1.0a0`)
@@ -50,7 +51,7 @@ import argparse
 
 # Version of the script
 VERSION_MAJOR = "1"
-VERSION_MINOR = "0"
+VERSION_MINOR = "1"
 VERSION_PATCH = "0"
 VERSION = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
@@ -362,8 +363,11 @@ def restore_placeholders(translated_content, code_blocks, anchor_placeholders, h
         placeholder = HEADER_PLACEHOLDER.format(i)
         # Translate header
         try:
-            header_translation = translator.translate(header_text, src=src_lang, dest=dest_lang)
-            translated_header_text = header_translation.text.strip()
+            if src_lang != dest_lang:
+                header_translation = translator.translate(header_text, src=src_lang, dest=dest_lang)
+                translated_header_text = header_translation.text.strip()
+            else:
+                translated_header_text = header_text.strip()
         except Exception as e:
             logging.exception(f"Error translating header '{header_text}': {e}")
             translated_header_text = header_text
@@ -662,6 +666,12 @@ def main():
         help='Prevent insertion of language links in the target files and skip creation of main document file'
     )
     parser.add_argument(
+        '-s', '--source-lang',
+        metavar='SOURCE_LANG_CODE',
+        default=None,
+        help='Source language code (optional). If not provided, the script will attempt to detect it automatically.'
+    )
+    parser.add_argument(
         '--version',
         action='version',
         version=f'%(prog)s v{VERSION}'
@@ -690,6 +700,7 @@ def main():
     main_doc = config.get('main_doc', args.main_doc)
     no_language_links = config.get('no_language_links', args.no_language_links)
     target_languages_config = config.get('target_languages', None)
+    source_lang_code_arg = config.get('source_lang', args.source_lang)
 
     # Prepare target languages
     global TARGET_LANGUAGES
@@ -726,15 +737,21 @@ def main():
     translator = Translator()
 
     # Detect source language
-    source_lang_code = detect_language(content, translator)
+    if source_lang_code_arg:
+        source_lang_code = source_lang_code_arg.lower()
+        source_lang_name = LANGUAGES.get(source_lang_code, source_lang_code).capitalize()
+        logging.info(f"Using specified source language: {source_lang_name} ({source_lang_code})")
+    else:
+        source_lang_code = detect_language(content, translator)
+        source_lang_name = LANGUAGES.get(source_lang_code, source_lang_code).capitalize()
+        logging.info(f"Detected source language: {source_lang_name} ({source_lang_code})")
+
     if source_lang_code not in TARGET_LANGUAGES:
         # Add source language to TARGET_LANGUAGES if not present
-        source_lang_name = LANGUAGES.get(source_lang_code, source_lang_code).capitalize()
         source_lang_flag = get_flag_emoji(source_lang_code)
         TARGET_LANGUAGES[source_lang_code] = (source_lang_name, source_lang_flag)
     else:
         source_lang_name, source_lang_flag = TARGET_LANGUAGES[source_lang_code]
-    logging.info(f"Detected source language: {source_lang_name} ({source_lang_code})")
 
     # Now, prepare translated_files after updating TARGET_LANGUAGES
     translated_files = {code: f"{prefix}{code}.md" for code in TARGET_LANGUAGES}
@@ -750,7 +767,7 @@ def main():
     # Log potential conflict
     if not is_filename_in_namespace(main_doc, prefix):
         logging.warning(
-            f"The main document file name '{main_doc}' starts not with the namespace'{prefix}'s. Use the '-m' parameter to set another main file or set '-p' parameter for another prefix."
+            f"The main document file name '{main_doc}' starts not with the namespace '{prefix}'. Use the '-m' parameter to set another main file or set '-p' parameter for another prefix."
         )
 
     if not no_language_links:
@@ -770,14 +787,18 @@ def main():
     for dest_lang in TARGET_LANGUAGES:
         target_lang_name, target_lang_flag = TARGET_LANGUAGES[dest_lang]
         translated_file = os.path.join(output_dir, translated_files[dest_lang])
-        logging.info(f"Translating '{template_file}' from {source_lang_name} to {target_lang_name}")
+        logging.info(f"Translating '{template_file}' from {source_lang_name} ({source_lang_code}) to {target_lang_name} ({dest_lang})")
 
         # Extract placeholders
         (content_placeholder, code_blocks, anchor_placeholders, headers, url_placeholders,
          images, html_elements, inline_codes, tables, latex_formulas) = extract_placeholders(content)
 
-        # Translate content
-        translated_content = translate_content(content_placeholder, translator, source_lang_code, dest_lang)
+        if dest_lang == source_lang_code:
+            logging.info(f"Skipping translation for source language '{source_lang_code}'")
+            translated_content = content_placeholder
+        else:
+            # Translate content
+            translated_content = translate_content(content_placeholder, translator, source_lang_code, dest_lang)
 
         # Restore placeholders
         translated_content = restore_placeholders(

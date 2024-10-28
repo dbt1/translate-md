@@ -121,6 +121,7 @@ Hier sind mehrere Beispiele, wie du das Skript mit allen möglichen Parametern v
 | `-m`     | `--main-doc`          | Name der Hauptdokument-Datei                                                              | `DOC.md`                               |
 | `-c`     | `--config-file`       | Pfad zur Konfigurationsdatei (optional)                                                  | `None`                                 |
 | `-n`     | `--no-language-links` | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | `False` (Sprachlinks aktiviert)        |
+| `-s`     | `--source-lang`       | Quellsprache (optional)                                                                 | `None` (automatisch)        |
 | `-v`     | `--version`           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
 | `-h`     | `--help`              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
 
@@ -358,7 +359,7 @@ jobs:
 
     - name: Translate README
       run: |
-        python translate-md.py --template-md template.md --output-dir . --prefix README_ --main-doc README.md
+        python translate-md.py --template-md template.md --output-dir . --prefix README_ --main-doc README.md --source-lang de
 
     - name: Commit and push translated README
       run: |
