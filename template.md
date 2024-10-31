@@ -314,15 +314,18 @@ python translate-md.py -t path/to/my_template.md -o path/to/translations -p DOC_
   
 > **Hinweis zu GitHub Actions Berechtigungen**: Damit der GitHub Actions Workflow die nötigen Berechtigungen hat, um Änderungen in das Repository zu pushen, musst du möglicherweise noch ein `Personal Access Token (PAT)` in deinem Account einrichten. Dieses Token wird benötigt, um die Authentifizierung sicherzustellen, besonders wenn du Schreibrechte zum pushen auf deine Repositorys brauchst. Weitere Informationen zur Einrichtung eines `PAT` findest du in der [GitHub Dokumentation zur Token-Konfiguration](https://docs.github.com/en/enterprise-server@3.1/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-Hier ist ein Beispiel einer `YAML-Datei`, die unter `.github/workflows/` angelegt und gepusht werden muss, sofern noch nicht vorhanden.
+Hier ist ein Beispiel einer `YAML-Datei`. Kopiere den Inhalt von hier und füge ihn in eine Datei ei. Nenne sie z.B. `translate.yaml`, die unter `.github/workflows/` gespeichert wird und gepusht werden muss, sofern noch nicht vorhanden.
+Der Aufbau ist generisch, damit der Workflow prinzipiell in jedem Repository verwendet werden kann, sofern die folgenden Voraussetzungen erfüllt sind:
+
+  - **Vorlage**: `readme-template.md` muss im Root Verzeichnis des Repositorys vorhanden sein und als Ausgangspunkt für die Übersetzung dienen.
+  - **Skript**:  `translate-md.py` muss mit den Übergabeparametern und dem Pfad zur Vorlage (`--template-md readme-template.md`) kompatibel sein und die restlichen Parameter entsprechend verarbeiten.
+  - **Quellsprache**: Die im Workflow definierte `SOURCE_LANG`-Umgebungsvariable muss der Quellsprache im Template entsprechen, damit die Übersetzung wie gewünscht funktioniert.
+  - **Konsistenz bei den Namen**: Der Workflow bezieht sich auf `readme-template.md` und generiert Dateien mit dem Präfix `README_`. Wenn ein anderer Name oder Präfix erforderlich ist, kann dies direkt in der `Translate README`-Schritt-Konfiguration angepasst werden.
+
+ > **Hinweis:** Bereits vorhandene README's bzw. Dateien, die mit dem festgelegten Namensbereich übereinstimmen, werden überschrieben! Notfalls bitte sichern! Es ist daher sinnvoll einen Workflow lokal zu testen. Weitere Informationen dazu [hier](https://github.com/nektos/act)!
 
 Hier wird angenommen, lokalisierte README.md-Dateien erzeugen zu wollen, die sich im Rootverzeichnis deines Repos befinden.
-In diesem Beispiel wird dafür eine Vorlagendatei `template.md` verwendet, die im Rootverzeichnis deines Repositorys bereits gespeichert wurde. Die Ausgabe der Übersetzungen erfolgt ebenfalls in das Rootverzeichnis `.`. Es wird in diesem Fall wird davon ausgegangen, dass man an dieser Vorlage Anpassungen vornimmt und beim Push geprüft wird, ob an dieser Datei Änderungen vorgenommen wurden. Ist dies der Fall, wird dieser Workflow ausgelöst, was im Abschnitt `on` unter `push` festgelegt ist. Es wird der Branch `master` und die Vorlage `template.md` überwacht. Wichtig ist hierbei, dass Schreibrechte aktivert werden, was unter dem Abschnitt `permissions` eingetragen sein muss. Weitere Einträge sorgen dafür, dass die notwendige Umgebung mit einigen Abängigkeiten eingerichtet wird, um dann letztich die Änderungen in das Repo zu pushen.
-
-Am abschließenden Commit wird noch `[ci skip]` angehängt. Dies soll verhindern, dass der Commit den Workflow erneut auslöst, wenn das nicht gewünscht ist. Das könnte unnötige Ressourcen sparen und Schleifen vermeiden. 
-
-
-  **Hinweis:** Es ist sinnvoll einen Workflow lokal zu testen. Weitere Informationen dazu [hier](https://github.com/nektos/act)!
+In diesem Beispiel wird dafür eine Vorlagendatei `readme-template.md` verwendet, die im Rootverzeichnis deines Repositorys bereits vorhanden ist. Die Ausgabe der Übersetzungen erfolgt ebenfalls in das Rootverzeichnis `.`. Beim Push in das Remote-Repository wird im `master`-Branch geprüft, ob an `readme-template.md` Änderungen vorgenommen wurden. Ist dies der Fall, wird dieser Workflow ausgelöst, was im Abschnitt `on` unter `push` festgelegt ist. Es wird also der Branch `master` und die Vorlagendatei überwacht. Wichtig ist hierbei, dass Schreibrechte aktivert werden, was unter dem Abschnitt `permissions` eingetragen ist. Weitere Einträge sorgen dafür, dass die notwendige Umgebung mit einigen Abängigkeiten eingerichtet wird, um dann letztich die Änderungen in das Repo zu pushen.
 
 ```yaml
 name: Translate README
@@ -332,7 +335,7 @@ on:
     branches:
       - master
     paths:
-      - 'template.md'
+      - 'readme-template.md'
 
 permissions:
   contents: write
@@ -341,29 +344,48 @@ jobs:
   translate:
     runs-on: ubuntu-latest
 
+    env:
+      PYTHON_VERSION: 3.x
+      GIT_USER_EMAIL: "actions@github.com"
+      GIT_USER_NAME: "GitHub Actions"
+      TRANSLATE_SCRIPT_NAME: "translate-md.py"
+      TRANSLATE_SCRIPT_URL: "https://raw.githubusercontent.com/dbt1/translate-md/master"
+      #TRANSLATE_SCRIPT_URL: "https://raw.githubusercontent.com/dbt1/translate-md/v1.2.0"
+      SOURCE_LANG: "de"
+      #SOURCE_LANG: "en"
+      TEMPLATE_FILE: "readme-template.md"
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade googletrans==3.1.0a0
+        curl -o ${{ env.TRANSLATE_SCRIPT_NAME }} ${{ env.TRANSLATE_SCRIPT_URL }}/${{ env.TRANSLATE_SCRIPT_NAME }}
+        chmod 755 ${{ env.TRANSLATE_SCRIPT_NAME }}
 
     - name: Translate README
       run: |
-        python translate-md.py --template-md template.md --output-dir . --prefix README_ --main-doc README.md --source-lang de
+        python ${{ env.TRANSLATE_SCRIPT_NAME }} --template-md ${{ env.TEMPLATE_FILE }} --output-dir . --prefix README_ --main-doc README.md -s ${{ env.SOURCE_LANG }}
 
     - name: Commit and push translated README
       run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add -A
-        git commit -m 'README: Automated translation update [ci skip]'
-        git push
+        git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+        git config --global user.name "${{ env.GIT_USER_NAME }}"
+        git add README*.md
+        if ! git diff --cached --quiet; then
+          git commit -m "readme: Automatically translated README"
+          git push
+        else
+          echo "No changes to commit"
+        fi
 ```
