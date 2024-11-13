@@ -6,7 +6,7 @@
 
 <div style="display: flex; align-items: center;">
   <img src="translate-md.png" alt="translate-md" style="width: 64px; margin-right: 10px;">
-  <span>Translate-MD ist ein Python-Script und dient dazu, aus einer Markdown-Dokumentvorlage, wie z.B. template.md, Dateien in mehrere Sprachen zu übersetzen und in vorgegebene Zielsprachen zu speichern. Dabei sollen codierte Inhalte wie Codeblöcke, Anker und Überschriften während des Übersetzungsprozesses erhalten bleiben. <br>
+  <span>Translate-MD ist ein Python-Script und dient dazu, aus einer Markdown-Dokumentvorlage, wie z.B. template.md, Dateien in mehrere Sprachen zu übersetzen und in vorgegebene Zielsprachen zu speichern. Dabei sollen codierte Inhalte wie Codeblöcke, Anker und Überschriften während des Übersetzungsprozesses erhalten bleiben.
   Es verwendet Google Translator, um den Inhalt automatisch zu übersetzen und dabei bestimmte Abschnitte unverändert zu lassen. Zusätzlich implementiert es Sprachlinks in allen übersetzten Dateien, um eine einfache Navigation zwischen verschiedenen Sprachversionen zu ermöglichen.
   </span>
 </div>
