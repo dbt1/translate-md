@@ -2,3 +2,5 @@
 venv
 *.kate-swp
 DOC*.md
+tagit.*
+tagit-*
