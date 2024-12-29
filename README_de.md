@@ -2,7 +2,8 @@
 <span style="color: grey;">🇩🇪 German</span> | [🇬🇧 English](README_en.md) | [🇪🇸 Spanish](README_es.md) | [🇫🇷 French](README_fr.md) | [🇮🇹 Italian](README_it.md)
 <!-- LANGUAGE_LINKS_END -->
 
-# Translate-MD - Markdown Übersetzungsskript
+
+# Translate-MD - Markdown Übersetzungsskript v1.2.11
 
 <div style="display: flex; align-items: center;">
   <img src="translate-md.png" alt="translate-md" style="width: 64px; margin-right: 10px;">
@@ -70,7 +71,7 @@ chmod +x dateiname.py
 
 Falls nicht bereits vorhanden, benötigt `Translate-MD` noch **googletrans 3.1.0a0**:
 
-   > **Hinweis:** Die neueste "stabile" Version von `googletrans` kann Probleme verursachen. Die Version `3.1.0a0` ist in der Regel stabiler und funktioniert besser.
+   > **Hinweis:** Die neueste "stabile" Version von `googletrans` kann Probleme verursachen. `Translate-MD` ist für die Version `3.1.0a0` ausgelegt ist in der Regel stabiler und funktioniert.
 
 ### Überprüfung der Abhängigkeiten
 
@@ -89,7 +90,6 @@ Erstelle einer virtuellen Umgebung, Aktiviere und Installiere `googletrans`:
    ```bash
    python3 -m venv venv && source venv/bin/activate && pip install googletrans==3.1.0a0 && pip install --upgrade setuptools
    ```
-
 
 ### Option 2: Systemweite Installation
 
@@ -214,7 +214,6 @@ python translate-md.py -c path/to/config.json
 
    > **Hinweis:** Die Vorgabe `target_languages` kann nur über die Konfigurationsdatei verwendet werden, ansonsten wird nur `de` und `en` verwendet.
 
-
 ### 5. Kombination von Kommandozeilenparametern und Konfigurationsdatei
 
 Wenn die Konfigurationsdatei ein Parameter nicht definiert ist, kannst du diese wie üblich mit Kommandozeilenparametern anwenden.
@@ -311,11 +310,10 @@ python translate-md.py -t path/to/my_template.md -o path/to/translations -p DOC_
 - **Kurzoptionen:** `-t`, `-o`, `-p`, `-m`, `-c`, `-n`
 - **Funktionalität:** Entspricht der kombinierten Verwendung aller langen Optionen.
 
-
 ## Beispiel für GitHub Actions Integration
 
 `Translate-MD` kann auch z.B. in GitHub Actions verwendet werden, um z.B. eine README-Datei automatisch bei bestimmten Events (z.B. nach einem Push in den master-Branch) zu übersetzen.
-  
+
 > **Hinweis zu GitHub Actions Berechtigungen**: Damit der GitHub Actions Workflow die nötigen Berechtigungen hat, um Änderungen in das Repository zu pushen, musst du möglicherweise noch ein `Personal Access Token (PAT)` in deinem Account einrichten. Dieses Token wird benötigt, um die Authentifizierung sicherzustellen, besonders wenn du Schreibrechte zum pushen auf deine Repositorys brauchst. Weitere Informationen zur Einrichtung eines `PAT` findest du in der [GitHub Dokumentation zur Token-Konfiguration](https://docs.github.com/en/enterprise-server@3.1/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
 Hier ist ein Beispiel einer `YAML-Datei`. Kopiere den Inhalt von hier und füge ihn in eine Datei ei. Nenne sie z.B. `translate.yaml`, die unter `.github/workflows/` gespeichert wird und gepusht werden muss, sofern noch nicht vorhanden.
@@ -393,4 +391,3 @@ jobs:
           echo "No changes to commit"
         fi
 ```
-

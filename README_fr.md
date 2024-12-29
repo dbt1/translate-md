@@ -2,191 +2,178 @@
 [🇩🇪 German](README_de.md) | [🇬🇧 English](README_en.md) | [🇪🇸 Spanish](README_es.md) | <span style="color: grey;">🇫🇷 French</span> | [🇮🇹 Italian](README_it.md)
 <!-- LANGUAGE_LINKS_END -->
 
-# Translate-MD - Script de traduction Markdown
+
+# Translate-MD - Script de traduction Markdown v1.2.11
 
 <div style="display: flex; align-items: center;">
   <img src="translate-md.png" alt="translate-md" style="width: 64px; margin-right: 10px;">
-  <span>Translate-MD ist ein Python-Script und dient dazu, aus einer Markdown-Dokumentvorlage, wie z.B. template.md, Dateien in mehrere Sprachen zu übersetzen und in vorgegebene Zielsprachen zu speichern. Dabei sollen codierte Inhalte wie Codeblöcke, Anker und Überschriften während des Übersetzungsprozesses erhalten bleiben.
-  Es verwendet Google Translator, um den Inhalt automatisch zu übersetzen und dabei bestimmte Abschnitte unverändert zu lassen. Zusätzlich implementiert es Sprachlinks in allen übersetzten Dateien, um eine einfache Navigation zwischen verschiedenen Sprachversionen zu ermöglichen.
+  <span>Translate-MD est un script Python utilisé pour traduire des fichiers dans plusieurs langues à partir d'un modèle de document Markdown, tel que template.md, et pour les enregistrer dans des langues cibles spécifiées. Le contenu codé tel que les blocs de code, les ancres et les titres doit être conservé pendant le processus de traduction.
+  Il utilise Google Translator pour traduire automatiquement le contenu tout en laissant certaines sections inchangées. De plus, il implémente des liens linguistiques dans tous les fichiers traduits pour permettre une navigation facile entre les différentes versions linguistiques.
   </span>
 </div>
 
 ## Table des matières
 
-- [Translate-MD: Markdown Übersetzungsskript](#translate-md-markdown-übersetzungsskript)
-  - [Inhaltsverzeichnis](#table-des-matières)
-  - [Funktionen](#caractéristiques)
+- [Translate-MD : script de traduction Markdown](#translate-md-markdown-übersetzungsskript)
+  - [Table des matières](#table-des-matières)
+  - [Fonctionnalités](#caractéristiques)
   - [Installation](#installation)
-    - [Abhängigkeiten installieren](#installer-les-dépendances)
-    - [Überprüfung der Abhängigkeiten](#vérification-des-dépendances)
-    - [Option 1: Installation und Ausführung in einer virtuellen Umgebung (empfohlen)](#option-1-installer-et-exécuter-dans-un-environnement-virtuel-recommandé)
-    - [Option 2: Systemweite Installation](#option-2-installation-à-léchelle-du-système)
-    - [Alternative Installation von googletrans vom GitHub-Repository (nicht empfohlen)](#installation-alternative-de-googletrans-à-partir-du-référentiel-github-non-recommandé)
-  - [Verwendung](#utiliser)
-    - [Zusammenfassung der Parameter](#résumé-des-paramètres)
-    - [1. Standardverwendung mit den Standardparametern](#1-utilisation-standard-avec-les-paramètres-standards)
-    - [2. Angabe einer spezifischen Template-Datei und eines Ausgabeverzeichnisses](#2-spécification-dun-fichier-modèle-spécifique-et-dun-répertoire-de-sortie)
-    - [3. Festlegen eines benutzerdefinierten Dateipräfixes und Namens für das Hauptdokument](#3-définissez-un-préfixe-et-un-nom-de-fichier-personnalisés-pour-le-document-principal)
-    - [4. Verwendung einer Konfigurationsdatei](#4-utilisation-dun-fichier-de-configuration)
-    - [5. Kombination von Kommandozeilenparametern und Konfigurationsdatei](#5-combinaison-de-paramètres-de-ligne-de-commande-et-de-fichier-de-configuration)
-    - [6. Verwendung der Option zum Deaktivieren von Sprachlinks](#6-utilisation-de-loption-pour-désactiver-les-liens-vocaux)
-    - [7. Kombinierte Verwendung aller Optionen](#7-utilisation-combinée-de-toutes-les-options)
-    - [8. Anzeigen der Versionsinformation](#8-afficher-les-informations-sur-la-version)
-    - [9. Hilfe anzeigen](#9-afficher-laide)
-    - [10. Beispiel mit deaktivierten Sprachlinks und Verwendung eines anderen Präfixes](#10-exemple-avec-des-liens-linguistiques-désactivés-et-utilisant-un-préfixe-différent)
-    - [11. Verwendung der Kurzform der Optionen](#11-utilisation-de-la-forme-abrégée-des-options)
-  - [Beispiel für GitHub Actions Integration](#exemple-dintégration-de-github-actions)
-
+    - [Installer les dépendances](#installer-les-dépendances)
+    - [Contrôle des dépendances](#vérification-des-dépendances)
+    - [Option 1 : Installer et exécuter dans un environnement virtuel (recommandé)](#option-1-installer-et-exécuter-dans-un-environnement-virtuel-recommandé)
+    - [Option 2 : Installation à l'échelle du système](#option-2-installation-à-léchelle-du-système)
+    - [Installation alternative de googletrans à partir du référentiel GitHub (non recommandé)](#installation-alternative-de-googletrans-à-partir-du-référentiel-github-non-recommandé)
+  - [Utilisation](#utiliser)
+    - [Résumé des paramètres](#résumé-des-paramètres)
+    - [1. Utilisation standard avec les paramètres par défaut](#1-utilisation-standard-avec-les-paramètres-standards)
+    - [2. Spécification d'un fichier modèle spécifique et d'un répertoire de sortie](#2-spécification-dun-fichier-modèle-spécifique-et-dun-répertoire-de-sortie)
+    - [3. Définition d'un préfixe et d'un nom de fichier personnalisés pour le document principal](#3-définissez-un-préfixe-et-un-nom-de-fichier-personnalisés-pour-le-document-principal)
+    - [4. Utilisation d'un fichier de configuration](#4-utilisation-dun-fichier-de-configuration)
+    - [5. Combinaison de paramètres de ligne de commande et de fichier de configuration](#5-combinaison-de-paramètres-de-ligne-de-commande-et-de-fichier-de-configuration)
+    - [6. Comment utiliser l'option de désactivation du lien vocal](#6-utilisation-de-loption-pour-désactiver-les-liens-vocaux)
+    - [7. Utilisation combinée de toutes les options](#7-utilisation-combinée-de-toutes-les-options)
+    - [8. Afficher les informations sur la version](#8-afficher-les-informations-sur-la-version)
+    - [9. Afficher l'aide](#9-afficher-laide)
+    - [10. Exemple avec les liens linguistiques désactivés et utilisant un préfixe différent](#10-exemple-avec-des-liens-linguistiques-désactivés-et-utilisant-un-préfixe-différent)
+    - [11. Utiliser la forme courte des options](#11-utilisation-de-la-forme-abrégée-des-options)
+  - [Exemple d'intégration des actions GitHub](#exemple-dintégration-de-github-actions)
 ## Caractéristiques
 
-- **Automatische Spracherkennung**: `Translate-MD`erkennt automatisch die Ausgangssprache aus der Vorlage.
-- **Mehrsprachige Übersetzung**: `Translate-MD`übersetzt den Inhalt in mehrere Sprachen, die im Skript unter `TARGET_LANGUAGES` oder optional über eine json-Konfigurationsdatei bei Bedarf ergänzt werden können.
-- **Bewahrt Formatierung**: Codeblöcke, Anker und Überschriften werden identifiziert und separat behandelt, um deren Funktionalität beizubehalten.
-- **Sprachnavigationslinks**: Es wird eine Hauptdatei mit Links zu anderen Übersetzungen als auch Links in jeder übersetzten Datei hinzugefügt oder aktualisiert, damit für den Leser ein einfacher Wechsel zwischen verschiedenen Sprachversionen möglich ist.
-
+- **Reconnaissance automatique de la langue** : `Translate-MD`reconnaît automatiquement la langue source du modèle.
+- **Traduction multilingue** : `Translate-MD`traduit le contenu en plusieurs langues, qui peut être complété dans le script sous `TARGET_LANGUAGES` ou éventuellement via un fichier de configuration json si nécessaire.
+- **Préserve le formatage** : les blocs de code, les ancres et les titres sont identifiés et traités séparément pour préserver leur fonctionnalité.
+- **Liens de navigation linguistique** : un fichier principal avec des liens vers d'autres traductions ainsi que des liens dans chaque fichier traduit sera ajouté ou mis à jour pour permettre au lecteur de basculer facilement entre les différentes versions linguistiques.
 ## installation
 
-Verwende `curl`, um das Skript direkt an einen Ort deiner Wahl herunterzuladen:
+Utilisez `curl` pour télécharger le script directement à l'emplacement de votre choix :
 
 ```bash
 curl -o translate-md.py https://raw.githubusercontent.com/dbt1/translate-md/master/translate-md.py
 ```
 
-**oder**
+**ou**
 
-Verwende `git clone`, um die gesamten Sourcen an einen Ort deiner Wahl zu klonen:
+Utilisez `git clone` pour cloner l'intégralité de la source vers un emplacement de votre choix :
 
 ```bash
 git clone https://github.com/dbt1/translate-md.git
 ```
 
-Du kannst `Translate-MD` von einem Ort deiner Wahl ausführen, entweder direkt dort, wo es sich nach dem Klonen befindet, oder im selben Verzeichnis, in dem sich die Markdown-Vorlage (Standard: `template.md`) befindet. Wenn `Translate-MD` direkt ausgeführt werden soll, muss das Skript je nach System ausführbar gemacht werden, indem du die Berechtigung änderst.
+Vous pouvez exécuter `Translate-MD` à partir d'un emplacement de votre choix, soit directement là où il se trouve après le clonage, soit dans le même répertoire où se trouve le modèle Markdown (par défaut : `template.md`). Si `Translate-MD` doit être exécuté directement, le script doit être rendu exécutable en modifiant l'autorisation en fonction du système.
 
 ```bash
 chmod +x dateiname.py
 ```
-
 ### Installer les dépendances
 
-Falls nicht bereits vorhanden, benötigt `Translate-MD` noch **googletrans 3.1.0a0**:
+S'il n'est pas déjà disponible, `Translate-MD` nécessite toujours **googletrans 3.1.0a0** :
 
-   > **Hinweis:** Die neueste "stabile" Version von `googletrans` kann Probleme verursachen. Die Version `3.1.0a0` ist in der Regel stabiler und funktioniert besser.
-
+   > **Remarque :** La dernière version "stable" de `googletrans` peut causer des problèmes. `Translate-MD` est conçu pour la version `3.1.0a0` est généralement plus stable et fonctionne.
 ### Vérification des dépendances
 
-So kannst du überprüfen, ob die benötigten Module korrekt installiert wurden:
+Voici comment vérifier si les modules requis ont été correctement installés :
 
 ```bash
 python3 -c "from googletrans import Translator; print('Installation erfolgreich')"
 ```
-
 ### Option 1 : installer et exécuter dans un environnement virtuel (recommandé)
 
-Wechsle dafür in das Verzeichnis, von wo du `Translate-MD` ausführen willst!
+Pour ce faire, accédez au répertoire à partir duquel vous souhaitez exécuter `Translate-MD` !
 
-Erstelle einer virtuellen Umgebung, Aktiviere und Installiere `googletrans`:
+Créez un environnement virtuel, activez et installez `googletrans` :
 
    ```bash
    python3 -m venv venv && source venv/bin/activate && pip install googletrans==3.1.0a0 && pip install --upgrade setuptools
    ```
-
-
 ### Option 2 : installation à l'échelle du système
 
-Wenn du keine virtuelle Umgebung verwenden möchtest und dein System dies zulässt, was z.B. bei Ubuntu oder Debian nicht immer der Fall ist, kannst du die erforderlichen Module auch global installieren:
+Si vous ne souhaitez pas utiliser d'environnement virtuel et que votre système le permet, ce qui n'est pas toujours le cas avec Ubuntu ou Debian par exemple, vous pouvez également installer globalement les modules requis :
 
 ```bash
 pip install googletrans==3.1.0a0
 ```
-
 ### Installation alternative de googletrans à partir du référentiel GitHub (non recommandé)
 
-  Falls Probleme auftreten, kannst du versuchen `googletrans` direkt von GitHub installieren:
+Si vous rencontrez des problèmes, vous pouvez essayer d'installer `googletrans` directement depuis GitHub :
 
   ```bash
   pip install git+https://github.com/ssut/py-googletrans.git
   ```
 
-Anschließend kannst du `Translate-MD` wie gewohnt ausführen.
-
+Vous pouvez ensuite exécuter `Translate-MD` comme d'habitude.
 ## utiliser
 
-Die folgende Beispiele sollten dir helfen, das Skript flexibel und entsprechend deinen Anforderungen zu verwenden.
+Les exemples suivants devraient vous aider à utiliser le script de manière flexible et selon vos besoins.
 
 ---
-
 ### Résumé des paramètres
 
-| Kurzform | Langform              | Beschreibung                                                                           | Standardwert                           |
+| Forme abrégée | Forme longue | Descriptif | Valeur par défaut |
 |----------|-----------------------|-----------------------------------------------------------------------------------------|----------------------------------------|
-| `-t`     | `--template-md`       | Pfad zur Template-Datei Standard:                                                       | `template.md` (im aktuellen Verzeichnis) |
-| `-o`     | `--output-dir`        | Verzeichnis, in dem die übersetzten Dateien gespeichert werden sollen                   | `.` (aktuelles Verzeichnis)            |
-| `-p`     | `--prefix`            | Präfix für die Namen der übersetzten Dateien                                             | `DOC_`                                 |
-| `-m`     | `--main-doc`          | Name der Hauptdokument-Datei                                                              | `DOC.md`                               |
-| `-c`     | `--config-file`       | Pfad zur Konfigurationsdatei (optional)                                                  | `None`                                 |
-| `-n`     | `--no-language-links` | Verhindert das Einfügen von Sprachlinks und überspringt die Erstellung der Hauptdokument-Datei | `False` (Sprachlinks aktiviert)        |
-| `-s`     | `--source-lang`       | Quellsprache (optional)                                                                 | `None` (automatisch)        |
-| `-v`     | `--version`           | Zeigt die Version des Skripts an und beendet die Ausführung                            |                                        |
-| `-h`     | `--help`              | Zeigt die Hilfsnachricht mit allen verfügbaren Optionen an                              |                                        |
+| `-t` | `--template-md` | Chemin d'accès au fichier modèle Par défaut : | `template.md` (dans le répertoire courant) |
+| `-o` | `--output-dir` | Répertoire où les fichiers traduits doivent être enregistrés | `.` (répertoire actuel) |
+| `-p` | `--prefix` | Préfixe pour les noms des fichiers traduits | `DOC_` |
+| `-m` | `--main-doc` | Nom du fichier du document principal | `DOC.md` |
+| `-c` | `--config-file` | Chemin d'accès au fichier de configuration (facultatif) | `None` |
+| `-n` | `--no-language-links` | Empêche l'insertion de liens de langue et ignore la création du fichier de document principal | `False` (Liens linguistiques activés) |
+| `-s` | `--source-lang` | Langue source (facultatif) | `None` (automatique) |
+| `-v` | `--version` | Affiche la version du script et arrête l'exécution |                                        |
+| `-h` | `--help` | Affiche le message d'aide avec toutes les options disponibles |                                        |
 
 ---
-
 ### 1. Utilisation standard avec les paramètres standards
 
 ```bash
 python translate-md.py
 ```
 
-**Beschreibung:**
-- **Template-Datei:** `template.md` muss bereits im gleichen Verzeichnis vorhanden sein wie `translate-md.py`!
-- **Ausgabeverzeichnis:** aktuelles Verzeichnis (`.`)
-- **Dateipräfix:** `DOC_`
-- **Hauptdokument:** `DOC.md`
-- **Konfigurationsdatei:** Nicht verwendet
-- **Sprachlinks:** Eingeschaltet
+**Description:**
+- **Fichier modèle :** `template.md` doit déjà exister dans le même répertoire que `translate-md.py` !
+- **Répertoire de sortie :** répertoire actuel (`.`)
+- **Préfixe du fichier :** `DOC_`
+- **Document principal :** `DOC.md`
+- **Fichier de configuration :** Non utilisé
+- **Liens linguistiques :** activés
 
 ---
-
 ### 2. Spécification d'un fichier modèle spécifique et d'un répertoire de sortie
 
 ```bash
 python translate-md.py -t path/to/my_template.md -o path/to/translations
 ```
 
-**Beschreibung:**
-- **Template-Datei:** `path/to/my_template.md`
-- **Ausgabeverzeichnis:** `path/to/translations`
-- **Andere Parameter:** Standardwerte
-- **Sprachlinks:** Eingeschaltet
+**Description:**
+- **Fichier modèle :** `path/to/my_template.md`
+- **Répertoire de sortie :** `path/to/translations`
+- **Autres paramètres :** Valeurs par défaut
+- **Liens linguistiques :** activés
 
 ---
-
 ### 3. Définissez un préfixe et un nom de fichier personnalisés pour le document principal
 
 ```bash
 python translate-md.py -p README_ -m main_README.md
 ```
 
-**Beschreibung:**
-- **Dateipräfix:** `README_`
-- **Hauptdokument:** `main_README.md`
-- **Andere Parameter:** Standardwerte
-- **Sprachlinks:** Eingeschaltet
+**Description:**
+- **Préfixe du fichier :** `README_`
+- **Document principal :** `main_README.md`
+- **Autres paramètres :** Valeurs par défaut
+- **Liens linguistiques :** activés
 
 ---
-
 ### 4. Utilisation d'un fichier de configuration
 
-**Parameter Formatierung:**
-In der Konfigurationsdatei müssen die Parameter als Schlüssel-Werte-Paare angegeben werden. Alle Schlüssel (der Schlüssel `config-file` macht nicht wirklich Sinn ;))  entsprechen den langen Namen der Kommandozeilenparameter ohne `--` am Anfang. Beispielsweise:
+**Formatage des paramètres :**
+Dans le fichier de configuration, les paramètres doivent être spécifiés sous forme de paires clé-valeur. Toutes les clés (la clé `config-file` n'a pas vraiment de sens ;)) correspondent aux noms longs des paramètres de ligne de commande sans `--` au début. Par exemple:
 
-- `template_md` entspricht `--template-md`
-- `output_dir` entspricht `--output-dir`
-- `prefix` entspricht `--prefix`
-- `main_doc` entspricht `--main-doc`
-- `no_language_links` entspricht `--no-language-links`
+- `template_md` correspond à `--template-md`
+- `output_dir` correspond à `--output-dir`
+- `prefix` correspond à `--prefix`
+- `main_doc` correspond à `--main-doc`
+- `no_language_links` correspond à `--no-language-links`
 
-Angenommen, du hast eine `config.json` mit folgendem Inhalt:
+Supposons que vous ayez un `config.json` avec le contenu suivant :
 
 ```json
 {
@@ -203,133 +190,123 @@ Angenommen, du hast eine `config.json` mit folgendem Inhalt:
 }
 ```
 
-**Befehl:**
+**Commande:**
 
 ```bash
 python translate-md.py -c path/to/config.json
 ```
 
-**Beschreibung:**
-- **Parameter:** Werden aus der `config.json` übernommen. Alle anderen nicht eingetragenen Parameter verwenden Standardvorgaben.
+**Description:**
+- **Paramètres :** Sont extraits du `config.json`. Tous les autres paramètres non saisis utilisent les paramètres par défaut.
 
-   > **Hinweis:** Die Vorgabe `target_languages` kann nur über die Konfigurationsdatei verwendet werden, ansonsten wird nur `de` und `en` verwendet.
-
-
+   > **Remarque :** Le `target_languages` par défaut ne peut être utilisé que via le fichier de configuration, sinon seuls `de` et `en` sont utilisés.
 ### 5. Combinaison de paramètres de ligne de commande et de fichier de configuration
 
-Wenn die Konfigurationsdatei ein Parameter nicht definiert ist, kannst du diese wie üblich mit Kommandozeilenparametern anwenden.
+Si le fichier de configuration n'a pas de paramètre défini, vous pouvez l'appliquer comme d'habitude avec les paramètres de ligne de commande.
 
-   > **Hinweis:** Die Einstellungen in der Konfigurationsdatei haben Vorrang, das heißt, Kommandozeilenparameter werden ignoriert, falls diese in der Konfigurationsdatei schon eingetragen wurden.
+   > **Remarque :** Les paramètres du fichier de configuration sont prioritaires, ce qui signifie que les paramètres de ligne de commande sont ignorés s'ils ont déjà été saisis dans le fichier de configuration.
 
-**Befehl:**
+**Commande:**
 
 ```bash
 python translate-md.py -c config.json -p DOC_ -n
 ```
 
-**Beschreibung:**
-- **Template-Datei, Ausgabeverzeichnis, Hauptdokument:** Aus der `config.json`
-- **Dateipräfix:** Überschreibt den in der `config.json` definierten Wert und setzt auf `DOC_`
-- **Sprachlinks:** Deaktiviert (`-n` oder `--no-language-links`)
+**Description:**
+- **Fichier modèle, répertoire de sortie, document principal :** À partir du `config.json`
+- **Préfixe de fichier :** Écrase la valeur définie dans `config.json` et définit sur `DOC_`
+- **Liens linguistiques :** Désactivé (`-n` ou `--no-language-links`)
 
 ---
-
 ### 6. Utilisation de l'option pour désactiver les liens vocaux
 
 ```bash
 python translate-md.py -n
 ```
 
-**Beschreibung:**
-- **Sprachlinks:** Deaktiviert
-- **Hauptdokument:** Wird nicht erstellt
-- **Andere Parameter:** Standardwerte
-- **Warnmeldung:** Das Skript gibt eine Warnung aus, dass die Option `-m` ignoriert wird.
+**Description:**
+- **Liens linguistiques :** Désactivé
+- **Document principal :** Non créé
+- **Autres paramètres :** Valeurs par défaut
+- **Message d'avertissement :** Le script émet un avertissement indiquant que l'option `-m` sera ignorée.
 
 ---
-
 ### 7. Utilisation combinée de toutes les options
 
 ```bash
 python translate-md.py -t path/to/my_template.md -o path/to/translations -p README_ -m main_README.md -c config.json --no-language-links
 ```
 
-**Beschreibung:**
-- **Template-Datei:** `path/to/my_template.md` (aus Kommandozeile)
-- **Ausgabeverzeichnis:** `path/to/translations` (aus Kommandozeile)
-- **Dateipräfix:** `README_` (aus Kommandozeile)
-- **Hauptdokument:** `main_README.md` (aus Kommandozeile, aber wird ignoriert)
-- **Konfigurationsdatei:** `config.json` (kann weitere Einstellungen enthalten)
-- **Sprachlinks:** Deaktiviert (`--no-language-links`)
-- **Warnmeldung:** Das Skript warnt, dass die Option `-m` ignoriert wird.
+**Description:**
+- **Fichier modèle :** `path/to/my_template.md` (à partir de la ligne de commande)
+- **Répertoire de sortie :** `path/to/translations` (à partir de la ligne de commande)
+- **Préfixe du fichier :** `README_` (à partir de la ligne de commande)
+- **Document principal :** `main_README.md` (à partir de la ligne de commande, mais est ignoré)
+- **Fichier de configuration :** `config.json` (peut contenir des paramètres supplémentaires)
+- **Liens linguistiques :** Désactivé (`--no-language-links`)
+- **Message d'avertissement :** Le script prévient que l'option `-m` sera ignorée.
 
 ---
-
 ### 8. Afficher les informations sur la version
 
 ```bash
 python translate-md.py --version
 ```
 
-**Beschreibung:**
-- **Funktion:** Zeigt die Version des Skripts an und beendet die Ausführung.
+**Description:**
+- **Fonction :** Affiche la version du script et arrête l'exécution.
 
 ---
-
 ### 9. Afficher l'aide
 
 ```bash
 python translate-md.py --help
 ```
 
-**Beschreibung:**
-- **Funktion:** Zeigt eine Hilfsnachricht mit allen verfügbaren Optionen und deren Beschreibungen an.
+**Description:**
+- **Fonction :** Affiche un message d'aide avec toutes les options disponibles et leurs descriptions.
 
 ---
-
 ### 10. Exemple avec des liens linguistiques désactivés et utilisant un préfixe différent
 
 ```bash
 python translate-md.py -p LANG_ -n
 ```
 
-**Beschreibung:**
-- **Dateipräfix:** `LANG_`
-- **Sprachlinks:** Deaktiviert
-- **Hauptdokument:** Wird nicht erstellt
-- **Andere Parameter:** Standardwerte
+**Description:**
+- **Préfixe du fichier :** `LANG_`
+- **Liens linguistiques :** Désactivé
+- **Document principal :** Non créé
+- **Autres paramètres :** Valeurs par défaut
 
 ---
-
 ### 11. Utilisation de la forme abrégée des options
 
 ```bash
 python translate-md.py -t path/to/my_template.md -o path/to/translations -p DOC_ -m main_README.md -c config.json -n
 ```
 
-**Beschreibung:**
-- **Kurzoptionen:** `-t`, `-o`, `-p`, `-m`, `-c`, `-n`
-- **Funktionalität:** Entspricht der kombinierten Verwendung aller langen Optionen.
-
-
+**Description:**
+- **Options courtes :** `-t`, `-o`, `-p`, `-m`, `-c`, `-n`
+- **Fonctionnalité :** Équivalent à l'utilisation de toutes les options longues combinées.
 ## Exemple d'intégration de GitHub Actions
 
-`Translate-MD` kann auch z.B. in GitHub Actions verwendet werden, um z.B. eine README-Datei automatisch bei bestimmten Events (z.B. nach einem Push in den master-Branch) zu übersetzen.
-  
-> **Hinweis zu GitHub Actions Berechtigungen**: Damit der GitHub Actions Workflow die nötigen Berechtigungen hat, um Änderungen in das Repository zu pushen, musst du möglicherweise noch ein `Personal Access Token (PAT)` in deinem Account einrichten. Dieses Token wird benötigt, um die Authentifizierung sicherzustellen, besonders wenn du Schreibrechte zum pushen auf deine Repositorys brauchst. Weitere Informationen zur Einrichtung eines `PAT` findest du in der [GitHub Dokumentation zur Token-Konfiguration](https://docs.github.com/en/enterprise-server@3.1/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+`Translate-MD` peut également être utilisé dans GitHub Actions, par exemple, pour traduire automatiquement un fichier README lors de certains événements (par exemple après un push vers la branche master).
 
-Hier ist ein Beispiel einer `YAML-Datei`. Kopiere den Inhalt von hier und füge ihn in eine Datei ei. Nenne sie z.B. `translate.yaml`, die unter `.github/workflows/` gespeichert wird und gepusht werden muss, sofern noch nicht vorhanden.
-Der Aufbau ist generisch, damit der Workflow prinzipiell in jedem Repository verwendet werden kann, sofern die folgenden Voraussetzungen erfüllt sind:
+> **Remarque sur les autorisations GitHub Actions** : pour que le workflow GitHub Actions dispose des autorisations nécessaires pour transmettre les modifications au référentiel, vous devrez peut-être configurer un `Personal Access Token (PAT)` dans votre compte. Ce jeton est nécessaire pour garantir l'authentification, en particulier si vous avez besoin d'autorisations d'écriture pour transférer vos données vers vos référentiels. Pour plus d'informations sur la configuration d'un `PAT`, consultez la [documentation sur la configuration du jeton GitHub](https://docs.github.com/en/enterprise-server@3.1/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-  - **Vorlage**: `readme-template.md` muss im Root Verzeichnis des Repositorys vorhanden sein und als Ausgangspunkt für die Übersetzung dienen.
-  - **Skript**:  `translate-md.py` muss mit den Übergabeparametern und dem Pfad zur Vorlage (`--template-md readme-template.md`) kompatibel sein und die restlichen Parameter entsprechend verarbeiten.
-  - **Quellsprache**: Die im Workflow definierte `SOURCE_LANG`-Umgebungsvariable muss der Quellsprache im Template entsprechen, damit die Übersetzung wie gewünscht funktioniert.
-  - **Konsistenz bei den Namen**: Der Workflow bezieht sich auf `readme-template.md` und generiert Dateien mit dem Präfix `README_`. Wenn ein anderer Name oder Präfix erforderlich ist, kann dies direkt in der `Translate README`-Schritt-Konfiguration angepasst werden.
+Voici un exemple de `YAML-Datei`. Copiez le contenu d'ici et collez-le dans un fichier. Par exemple, nommez-le `translate.yaml`, qui est stocké sous `.github/workflows/` et doit être poussé s'il n'existe pas déjà.
+La structure est générique de sorte que le workflow peut en principe être utilisé dans n'importe quel référentiel tant que les conditions suivantes sont remplies :
 
- > **Hinweis:** Bereits vorhandene README's bzw. Dateien, die mit dem festgelegten Namensbereich übereinstimmen, werden überschrieben! Notfalls bitte sichern! Es ist daher sinnvoll einen Workflow lokal zu testen. Weitere Informationen dazu [hier](https://github.com/nektos/act)!
+  - **Modèle** : `readme-template.md` doit exister dans le répertoire racine du référentiel et servir de point de départ pour la traduction.
+  - **Script** : `translate-md.py` doit être compatible avec les paramètres de transfert et le chemin d'accès au modèle (`--template-md readme-template.md`) et traiter les paramètres restants en conséquence.
+  - **Langue source** : La variable d'environnement `SOURCE_LANG` définie dans le workflow doit correspondre à la langue source dans le modèle pour que la traduction fonctionne comme souhaité.
+  - **Cohérence du nom** : Le workflow fait référence à `readme-template.md` et génère des fichiers avec le préfixe `README_`. Si un nom ou un préfixe différent est requis, celui-ci peut être ajusté directement dans la configuration de l'étape `Translate README`.
 
-Hier wird angenommen, lokalisierte README.md-Dateien erzeugen zu wollen, die sich im Rootverzeichnis deines Repos befinden.
-In diesem Beispiel wird dafür eine Vorlagendatei `readme-template.md` verwendet, die im Rootverzeichnis deines Repositorys bereits vorhanden ist. Die Ausgabe der Übersetzungen erfolgt ebenfalls in das Rootverzeichnis `.`. Beim Push in das Remote-Repository wird im `master`-Branch geprüft, ob an `readme-template.md` Änderungen vorgenommen wurden. Ist dies der Fall, wird dieser Workflow ausgelöst, was im Abschnitt `on` unter `push` festgelegt ist. Es wird also der Branch `master` und die Vorlagendatei überwacht. Wichtig ist hierbei, dass Schreibrechte aktivert werden, was unter dem Abschnitt `permissions` eingetragen ist. Weitere Einträge sorgen dafür, dass die notwendige Umgebung mit einigen Abängigkeiten eingerichtet wird, um dann letztich die Änderungen in das Repo zu pushen.
+ > **Remarque :** Les fichiers README existants ou les fichiers correspondant à la plage de noms spécifiée seront écrasés ! Veuillez sauvegarder si nécessaire ! Il est donc judicieux de tester un workflow localement. Plus d'informations à ce sujet [ici](https://github.com/nektos/act) !
+
+L'hypothèse ici est que vous souhaitez créer des fichiers README.md localisés situés dans le répertoire racine de votre dépôt.
+Cet exemple utilise un fichier modèle `readme-template.md` qui existe déjà dans le répertoire racine de votre référentiel. Les traductions sont également sorties dans le répertoire racine `.`. Lors du transfert vers le référentiel distant, la branche `master` vérifie si des modifications ont été apportées à `readme-template.md`. Si tel est le cas, ce workflow est déclenché, ce qui est spécifié dans la section `on` sous `push`. Ainsi, la branche `master` et le fichier modèle sont surveillés. Il est important que les autorisations d'écriture soient activées, ce qui est saisi dans la section `permissions`. D'autres entrées garantissent que l'environnement nécessaire est mis en place avec certaines dépendances afin de finalement transférer les modifications dans le dépôt.
 
 ```yaml
 name: Translate README
@@ -393,4 +370,3 @@ jobs:
           echo "No changes to commit"
         fi
 ```
-
