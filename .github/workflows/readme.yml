@@ -17,16 +17,45 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: 3.x
 
-    - name: Install dependencies
+    - name: Prepare Git user data
+      run: |
+        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git config --global user.name "Automated Workflow by ${GITHUB_ACTOR}"
+
+    - name: Install tagit dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install GitPython
+        curl -o tagit.py https://raw.githubusercontent.com/dbt1/tagit/master/tagit.py
+        curl -o tagit-config.json https://raw.githubusercontent.com/dbt1/tagit/master/tagit-config.json
+        chmod +x tagit.py
+
+    - name: Verify tagit.py download
+      run: |
+        if [ ! -f tagit.py ]; then
+         echo "tagit.py was not downloaded!"
+         exit 1
+        fi
+
+    - name: Tagging
+      run: |
+        python tagit.py -f template.md -f translate-md.py --no-tag
+
+    - name: Commit and push version and tag changes
+      run: |
+        git add -A
+        git commit -m "tagging: Automatically updated tags" || echo "No changes to commit"
+        git push
+
+    - name: Install translate dependencies
+      run: |
         pip install --upgrade googletrans==3.1.0a0
 
     - name: Translate README
@@ -35,9 +64,6 @@ jobs:
 
     - name: Commit and push translated README
       run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
         git add -A
-        git commit -m "readme: Automatically translated README"
+        git commit -m "readme: Automatically translated README files [skip ci]" || echo "No changes to commit"
         git push
-
