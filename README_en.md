@@ -2,7 +2,7 @@
 [🇩🇪 German](README_de.md) | <span style="color: grey;">🇬🇧 English</span> | [🇪🇸 Spanish](README_es.md) | [🇫🇷 French](README_fr.md) | [🇮🇹 Italian](README_it.md)
 <!-- LANGUAGE_LINKS_END -->
 
-# Translate-MD: Markdown translation script
+# Translate-MD - Markdown translation script
 
 <div style="display: flex; align-items: center;">
   <img src="translate-md.png" alt="translate-md" style="width: 64px; margin-right: 10px;">
@@ -13,7 +13,7 @@
 
 ## Table of contents
 
-- [Translate-MD: Markdown Übersetzungsskript](#translate-md-markdown-translation-script)
+- [Translate-MD: Markdown Übersetzungsskript](#translate-md-markdown-übersetzungsskript)
   - [Inhaltsverzeichnis](#table-of-contents)
   - [Funktionen](#features)
   - [Installation](#installation)

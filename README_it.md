@@ -13,7 +13,7 @@
 
 ## Sommario
 
-- [Translate-MD: Markdown Übersetzungsskript](#translate-md-script-di-traduzione-markdown)
+- [Translate-MD: Markdown Übersetzungsskript](#translate-md-markdown-übersetzungsskript)
   - [Inhaltsverzeichnis](#sommario)
   - [Funktionen](#caratteristiche)
   - [Installation](#installazione)
