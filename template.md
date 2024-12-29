@@ -66,7 +66,7 @@ chmod +x dateiname.py
 
 Falls nicht bereits vorhanden, benötigt `Translate-MD` noch **googletrans 3.1.0a0**:
 
-   > **Hinweis:** Die neueste "stabile" Version von `googletrans` kann Probleme verursachen. Die Version `3.1.0a0` ist in der Regel stabiler und funktioniert besser.
+   > **Hinweis:** Die neueste "stabile" Version von `googletrans` kann Probleme verursachen. `Translate-MD` ist für die Version `3.1.0a0` ausgelegt ist in der Regel stabiler und funktioniert.
 
 ### Überprüfung der Abhängigkeiten
 
